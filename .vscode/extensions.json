@@ -1,0 +1,11 @@
+// .vscode/extensions.json
+{
+  "recommendations": [
+    // Prettier: format JSON, TS, JS
+    "esbenp.prettier-vscode",
+    // Rust: language server & analyzer
+    "rust-lang.rust-analyzer",
+    // SQL: migrations & query formatting
+    "adpyke.vscode-sql-formatter"
+  ]
+}

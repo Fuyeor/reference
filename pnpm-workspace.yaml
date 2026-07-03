@@ -1,0 +1,11 @@
+# /pnpm-workspace.yaml
+packages:
+  - 'apps/front-end'
+  - '../monorepo/packages/interactify'
+  - '../monorepo/packages/vue-router'
+  - '../monorepo/packages/vue-query'
+  - '../monorepo/packages/commons'
+  - '../monorepo/packages/locale'
+  - '../monorepo/packages/config'
+  - '../markdown-parser/packages/markdown-parser'
+  - '../markdown-parser/packages/markdown-parser-vue'
