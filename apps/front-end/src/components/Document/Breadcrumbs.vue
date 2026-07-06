@@ -17,6 +17,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useLocale } from '@fuyeor/locale';
+import { useJsonLd } from '@fuyeor/commons';
 import type { ModuleStructure, NavNode } from '@/types/doc';
 
 interface BreadcrumbItem {
@@ -80,6 +81,22 @@ const items = computed<BreadcrumbItem[]>(() => {
   }
 
   return list;
+});
+
+// https://search.google.com/test/rich-results
+useJsonLd(() => {
+  if (!items.value.length) return null;
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.value.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: item.title,
+      item: `https://reference.fuyeor.com${item.path}`,
+    })),
+  };
 });
 </script>
 

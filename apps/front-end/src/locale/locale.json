@@ -19,6 +19,14 @@
     "en": "Search documents...",
     "zh-hans": "搜索文档..."
   },
+  "site.name": {
+    "en": "Ф Reference",
+    "zh-hans": "Ф Reference"
+  },
+  "site.title": {
+    "en": "Design Efficient, Sustainable, Secure, and Aesthetic Blueprints",
+    "zh-hans": "设计高效、可持续、安全、美观的蓝图"
+  },
   "toc": {
     "en": "In this article",
     "zh-hans": "文档目录"

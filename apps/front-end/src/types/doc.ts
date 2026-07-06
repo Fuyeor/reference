@@ -1,19 +1,16 @@
 // @/types/doc.ts
 
-export interface DocMeta {
-  locale: string[];
-  updatedAt: string;
-  authors: string[];
-}
-
-export interface SidebarNode {
-  id?: string;
-  title: string | Record<string, string>;
-  pages?: string[];
+/**
+ * product module JSON structure
+ */
+export interface ModuleStructure {
+  title: string;
+  description: string;
+  navigation: NavNode[];
 }
 
 /**
- * 单个导航节点（对应文章页面或子目录）
+ * single navigation node (corresponding to an article page or subdirectory)
  */
 export interface NavNode {
   slug: string;
@@ -22,10 +19,11 @@ export interface NavNode {
 }
 
 /**
- * 整个技术模块的根结构规范
+ * article meta information
  */
-export interface ModuleStructure {
+export interface DocMeta {
   title: string;
-  description: string;
-  navigation: NavNode[];
+  locale: string[];
+  updatedAt: string;
+  authors: string[];
 }

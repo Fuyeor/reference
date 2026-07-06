@@ -1,0 +1,25 @@
+{
+  "title": {
+    "zh-hans": "FFM 规范",
+    "en": "FFM Specification"
+  },
+  "description": {
+    "zh-hans": "Fuyeor Flavored Markdown (FFM) 语法排版规范与技术参考指南。",
+    "en": "Fuyeor Flavored Markdown (FFM) typography specifications and technical references."
+  },
+  "navigation": [
+    { "slug": "overview" },
+    {
+      "slug": "tutorial",
+      "title": {
+        "zh-hans": "基础指南",
+        "en": "Tutorials"
+      },
+      "navigation": [
+        { "slug": "overview" },
+        { "slug": "getting-started" },
+        { "slug": "differences-from-commonmark" }
+      ]
+    }
+  ]
+}

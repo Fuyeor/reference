@@ -5,9 +5,8 @@
       <!-- Case A: page like /overview -->
       <router-link
         v-if="!node.navigation"
-        :to="`/${props.locale}/${props.module}/${node.slug}`"
         class="nav-item"
-        active-class="active"
+        :to="`/${props.locale}/${props.module}/${node.slug}`"
       >
         {{ node.title }}
       </router-link>
@@ -20,17 +19,14 @@
         "
         :model-value="isFolderActive(node.slug)"
       >
-        <div class="foldable-children">
-          <router-link
-            v-for="subNode in node.navigation"
-            :key="subNode.slug"
-            :to="`/${props.locale}/${props.module}/${node.slug}/${subNode.slug}`"
-            class="nav-item sub-item"
-            active-class="active"
-          >
-            {{ subNode.title }}
-          </router-link>
-        </div>
+        <router-link
+          v-for="subNode in node.navigation"
+          class="nav-item sub-item"
+          :key="subNode.slug"
+          :to="`/${props.locale}/${props.module}/${node.slug}/${subNode.slug}`"
+        >
+          {{ subNode.title }}
+        </router-link>
       </Foldable>
     </template>
   </div>
@@ -55,3 +51,27 @@ const isFolderActive = (folderSlug: string) => {
   return segments.includes(folderSlug);
 };
 </script>
+
+<style>
+.sidebar-tree {
+  padding: 10px 0;
+  margin: 10px;
+
+  .foldable-header {
+    img {
+      display: none;
+    }
+    p {
+      font-size: 1.1rem;
+    }
+  }
+
+  .foldable-content {
+    padding-left: 16px;
+
+    .nav-item {
+      padding: 8px 10px;
+    }
+  }
+}
+</style>

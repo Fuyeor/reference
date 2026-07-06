@@ -1,6 +1,6 @@
-<!-- @/views/Document/View.vue -->
+<!-- @/views/Document/Content.vue -->
 <template>
-  <HeaderBar title="REFERENCE" />
+  <HeaderBar :title="isDocMetaRetrieved ? docMeta?.title : '...'" />
 
   <StateDisplay
     v-if="!isRetrieved"
@@ -46,9 +46,10 @@ import Breadcrumbs from '@/components/Document/Breadcrumbs.vue';
 import LeftAnchor from '@/components/LeftAnchor.vue';
 import DocNav from '@/components/Document/Nav.vue';
 
-import { ref, computed } from 'vue';
+import { ref, computed, watch, onUnmounted } from 'vue';
 import { useRoute, useRouter } from '@fuyeor/vue-router';
 import { useLocale } from '@fuyeor/locale';
+import { useTitleStore } from '@fuyeor/commons';
 import {
   HeaderBar,
   StateDisplay,
@@ -57,12 +58,17 @@ import {
   type TocItem,
 } from '@fuyeor/interactify';
 import { MarkdownRenderer } from '@/composables/loader/useMarkdownComponents';
-import { useModuleStructure, useDocMarkdown } from '@/composables/api/useDoc';
+import {
+  useModuleStructure,
+  useDocMarkdown,
+  useDocMeta,
+} from '@/composables/api/useDoc';
 
 const { t } = useLocale();
 
 const route = useRoute();
 const router = useRouter();
+const titleStore = useTitleStore();
 const tocItems = ref<TocItem[]>([]);
 
 const currentLocale = computed(() => route.params.locale);
@@ -84,9 +90,38 @@ const {
   () => currentLocale.value,
 );
 
+const { data: docMeta, isRetrieved: isDocMetaRetrieved } = useDocMeta(
+  () => currentModule.value,
+  () => currentNavigation.value,
+);
+
 const handleTocUpdated = (items: TocItem[]) => {
   tocItems.value = items;
 };
-</script>
 
-<style scoped></style>
+// set page title
+watch(
+  () => isDocMetaRetrieved.value && structure.isRetrieved.value,
+  (ready) => {
+    if (ready && docMeta.value && structure.data.value) {
+      const pageTitle = docMeta.value.title;
+      const locale = currentLocale.value;
+
+      // extract module localized title
+      const moduleTitle =
+        typeof structure.data.value.title === 'string'
+          ? structure.data.value.title
+          : structure.data.value.title[locale] || currentModule.value;
+
+      // article title « module
+      titleStore.setDynamicSegment(`${pageTitle} « ${moduleTitle}`);
+    }
+  },
+  { immediate: true },
+);
+
+// clean title
+onUnmounted(() => {
+  titleStore.clearDynamicSegment();
+});
+</script>

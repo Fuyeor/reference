@@ -1,4 +1,4 @@
-**reference** (reference.fuyeor.com) is a documentation platform for Ф.
+[**reference**](https://reference.fuyeor.com) is a documentation platform for Ф.
 
 ## Documentation
 

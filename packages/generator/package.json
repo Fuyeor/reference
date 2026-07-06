@@ -1,0 +1,19 @@
+{
+  "name": "@fuyeor/reference-generator",
+  "version": "0.0.1",
+  "license": "MIT",
+  "author": "Fuyeor <https://www.fuyeor.com/@Fuyeor>",
+  "type": "module",
+  "sideEffects": false,
+  "scripts": {
+    "build": "esbuild src/index.ts --bundle --platform=node --format=esm --outfile=dist/index.js",
+    "start": "node dist/index.js",
+    "test": "vitest run"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.12"
+  }
+}

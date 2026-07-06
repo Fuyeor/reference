@@ -172,6 +172,12 @@ importers:
         specifier: 8.0.1
         version: 8.0.1(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(@types/node@24.13.2)(terser@5.48.0)
 
+  packages/generator:
+    devDependencies:
+      esbuild:
+        specifier: ^0.25.12
+        version: 0.25.12
+
 packages:
 
   '@asamuzakjp/css-color@5.1.11':
