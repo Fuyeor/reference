@@ -1,0 +1,77 @@
+# .github/workflows/deploy.yml
+name: Build and Push Docker Images
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  REGISTRY: ghcr.io
+  # We remove the global IMAGE_NAME here as we will dynamically generate its lowercase version below
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      # 1. Check out the Fuyeor Reference Repository (This current repo)
+      - name: Checkout Reference Repository
+        uses: actions/checkout@v4
+        with:
+          path: reference
+
+      # 2. Check out the shared Fuyeor Monorepo containing commons/interactify/router
+      - name: Checkout Shared Monorepo
+        uses: actions/checkout@v4
+        with:
+          repository: Fuyeor/monorepo
+          token: ${{ secrets.FUYEOR_DEPLOY_TOKEN }}
+          path: monorepo
+
+      # 3. Check out the FFM parser repository
+      - name: Checkout Markdown Parser Repository
+        uses: actions/checkout@v4
+        with:
+          repository: Fuyeor/markdown-parser
+          path: markdown-parser
+
+      # 3.5 Dynamic Lowercase Injection
+      - name: Lowercase Repository Name
+        run: |
+          echo "IMAGE_NAME=${GITHUB_REPOSITORY,,}" >> ${GITHUB_ENV}
+
+      # 4. Setup Docker Buildx for advanced caching features
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # 5. Log in to GitHub Container Registry natively
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.FUYEOR_DEPLOY_TOKEN }}
+
+      # 5.5 Extract the private locale-cli binary directly on the host runner
+      - name: Extract locale-cli binary
+        run: |
+          docker pull ghcr.io/fuyeor/locale-cli:latest
+          docker create --name temp-locale-cli ghcr.io/fuyeor/locale-cli:latest
+          mkdir -p reference/bin
+          docker cp temp-locale-cli:/usr/local/bin/locale-cli reference/bin/locale-cli
+          docker rm temp-locale-cli
+          chmod +x reference/bin/locale-cli
+
+      # 6. Build, Package, and automatically PUSH the image to GHCR
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: . # Build context containing all three repos side-by-side
+          file: ./reference/Dockerfile
+          push: true # Enables automatic pushing to GHCR
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
