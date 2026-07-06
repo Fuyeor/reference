@@ -1,4 +1,12 @@
 {
+  "doc.menu.copyMarkdown": {
+    "en": "Copy Markdown Content",
+    "zh-hans": "复制 Markdown 内容"
+  },
+  "doc.menu.openMarkdown": {
+    "en": "Open Original Markdown",
+    "zh-hans": "打开原始 Markdown"
+  },
   "intro.desc": {
     "en": "Design Efficient, Sustainable, Secure, and Aesthetic Blueprints",
     "zh-hans": "设计高效、可持续、安全、美观的蓝图"
@@ -10,5 +18,9 @@
   "search.placeholder": {
     "en": "Search documents...",
     "zh-hans": "搜索文档..."
+  },
+  "toc": {
+    "en": "In this article",
+    "zh-hans": "文档目录"
   }
 }

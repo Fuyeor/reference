@@ -7,6 +7,18 @@
   --text-primary: #111111;
 }
 
+.right-sidebar {
+  padding: 30px 30px 30px 20px;
+
+  h3:after {
+    content: none;
+  }
+
+  .search-bar-container input {
+    padding: 16px;
+  }
+}
+
 /* 大于 1000px 电脑版 */
 @media (width >= 1000px) {
   main {
