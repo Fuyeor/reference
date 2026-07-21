@@ -10,7 +10,7 @@
   "navigation": [
     { "slug": "overview" },
     {
-      "slug": "tutorial",
+      "slug": "tutorials",
       "title": {
         "zh-hans": "基础指南",
         "en": "Tutorials"
@@ -18,7 +18,8 @@
       "navigation": [
         { "slug": "overview" },
         { "slug": "getting-started" },
-        { "slug": "differences-from-commonmark" }
+        { "slug": "differences-from-commonmark" },
+        { "slug": "prompts" }
       ]
     }
   ]

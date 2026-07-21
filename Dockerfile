@@ -84,11 +84,6 @@ RUN echo 'server { \
     root /usr/share/nginx/html; \
     index index.html; \
     \
-    # Native support for .fon files in Nginx \
-    types { \
-        application/json fon; \
-    } \
-    \
     # Support SPA router history mode \
     location / { \
         try_files $uri $uri/ /index.html; \

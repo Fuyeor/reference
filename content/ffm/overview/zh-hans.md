@@ -1,6 +1,6 @@
 # Fuyeor Flavored Markdown
 
-Fuyeor Flavored Markdown（简称 FFM）是一种在保留传统 Markdown 简洁性的基础上，移除其易混淆的冗余语法、并引入更多现代排版格式的 Markdown 规范，广泛用于日常交流、项目文档。
+Fuyeor Flavored Markdown（简称 FFM 或 FuyeorMark）是一种在保留传统 Markdown 简洁性的基础上，移除其易混淆的冗余语法、并引入更多现代排版格式的 Markdown 规范，广泛用于日常交流、项目文档。
 
 ## 核心设计理念
 
@@ -10,9 +10,9 @@ Fuyeor Flavored Markdown（简称 FFM）是一种在保留传统 Markdown 简洁
 
 ## 探索 FFM
 
-- **如果你是内容创作者**：可阅读 [FFM 基础指南](/ffm/tutorial/overview)，了解如何快速编写美观的文档。
-- **如果你已熟悉 Markdown**：可阅读 [FFM 与其他 Markdown 的差异](/ffm/tutorial/differences-from-commonmark)，了解 FFM 和 CommonMark、GFM 的差异。
-- **如果你是解析器开发者**：可查阅 [FFM 技术规范](/ffm/specifications/overview)，获取 AST 节点定义与边界测试用例。
+- **如果你是内容创作者**：可阅读 [FFM 基础指南](./tutorials/overview)，了解如何快速编写美观的文档。
+- **如果你已熟悉 Markdown**：可阅读 [FFM 与其他 Markdown 的差异](./tutorials/differences-from-commonmark)，了解 FFM 和 CommonMark、GFM 的差异。
+- **如果你是解析器开发者**：可查阅 [FFM 技术规范](./specifications/overview)，获取 AST 节点定义与边界测试用例。
 
 ## 参考实现
 
