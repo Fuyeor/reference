@@ -118,21 +118,15 @@ useJsonLd(() => {
   align-items: center;
 }
 .breadcrumb-item a {
-  color: #666;
-  text-decoration: none;
+  color: var(--text-accent);
   transition: color 0.2s ease;
 }
 .breadcrumb-item a:hover {
-  color: #3b10b9;
+  color: var(--text-on-accent);
   text-decoration: underline;
 }
 .breadcrumb-item:last-child a {
-  color: #111;
+  color: var(--text-tertiary);
   pointer-events: none;
-}
-.separator {
-  margin: 0 0.5rem;
-  color: #ccc;
-  user-select: none;
 }
 </style>

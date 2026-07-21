@@ -7,19 +7,13 @@
   --text-primary: #111111;
 }
 
-.right-sidebar {
-  padding: 30px 30px 30px 20px;
-
-  h3:after {
-    content: none;
-  }
-
-  .search-bar-container input {
-    padding: 16px;
-  }
+.separator {
+  margin: 0 0.5rem;
+  color: #ccc;
+  user-select: none;
 }
 
-/* 大于 1000px 电脑版 */
+/* ≥ 1000px (PC) */
 @media (width >= 1000px) {
   main {
     margin: 20px 0;
@@ -32,11 +26,37 @@
   }
 }
 
+/* ≤ 1000px (mobile) */
+@media (width <= 768px) {
+  main {
+    top: var(--height-header);
+  }
+
+  .header {
+    top: var(--height-sticky-header);
+    height: calc(var(--height-sticky-header) - 10px);
+  }
+
+  .markdown-rendered {
+    h1 {
+      font-size: 1.5rem;
+    }
+
+    h2 {
+      font-size: 1.4rem;
+    }
+
+    h3 {
+      font-size: 1.3rem;
+    }
+  }
+}
+
 h3:after {
   display: none;
 }
 
-/* 内容区 markdown 富文本 */
+/* markdown content */
 .markdown-rendered {
   ol,
   ul {
@@ -55,24 +75,6 @@ h3:after {
   }
 }
 
-.truncate {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  flex-shrink: 0;
-  overflow: hidden;
-  word-break: break-word;
-}
-
-.line-3 {
-  line-clamp: 3;
-  -webkit-line-clamp: 3;
-}
-
-.line-4 {
-  line-clamp: 4;
-  -webkit-line-clamp: 4;
-}
-
 .left-sidebar {
   .nav p {
     font-size: 1.25rem;
@@ -83,21 +85,14 @@ h3:after {
   }
 }
 
-.avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  object-fit: cover;
-}
+.right-sidebar {
+  padding: 30px 30px 30px 20px;
 
-.organization-tab-container {
-  max-width: 90%;
-  margin: 0 auto;
-}
+  h3:after {
+    content: none;
+  }
 
-.clients-list {
-  display: flex;
-  gap: 24px;
-  flex-direction: column;
+  .search-bar-container input {
+    padding: 16px;
+  }
 }

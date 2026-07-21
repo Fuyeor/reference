@@ -72,6 +72,7 @@ html:lang(ja) {
   .search-bar-container input {
     border-radius: 24px;
     padding: 14px;
+    background: var(--surface-raised-hover);
   }
 
   h1 {

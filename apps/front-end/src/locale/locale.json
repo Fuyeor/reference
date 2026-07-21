@@ -1,11 +1,31 @@
 {
+  "doc.authors": {
+    "en": "Authors",
+    "zh-hans": "文档作者"
+  },
   "doc.menu.copyMarkdown": {
-    "en": "Copy Markdown Content",
-    "zh-hans": "复制 Markdown 内容"
+    "en": "Copy Content",
+    "zh-hans": "复制内容"
+  },
+  "doc.menu.edit": {
+    "en": "Edit on GitHub",
+    "zh-hans": "在 GitHub 编辑"
   },
   "doc.menu.openMarkdown": {
-    "en": "Open Original Markdown",
-    "zh-hans": "打开原始 Markdown"
+    "en": "Open Original",
+    "zh-hans": "打开原始内容"
+  },
+  "doc.pagination.next": {
+    "en": "Next",
+    "zh-hans": "下一页"
+  },
+  "doc.pagination.prev": {
+    "en": "Previous",
+    "zh-hans": "上一页"
+  },
+  "doc.toc": {
+    "en": "In this article",
+    "zh-hans": "文档目录"
   },
   "intro.desc": {
     "en": "Design Efficient, Sustainable, Secure, and Aesthetic Blueprints",
@@ -26,9 +46,5 @@
   "site.title": {
     "en": "Design Efficient, Sustainable, Secure, and Aesthetic Blueprints",
     "zh-hans": "设计高效、可持续、安全、美观的蓝图"
-  },
-  "toc": {
-    "en": "In this article",
-    "zh-hans": "文档目录"
   }
 }
