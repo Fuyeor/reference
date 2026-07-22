@@ -15,6 +15,10 @@
     "en": "Open Original",
     "zh-hans": "打开原始内容"
   },
+  "doc.menu.print": {
+    "en": "Print as PDF",
+    "zh-hans": "打印为 PDF"
+  },
   "doc.pagination.next": {
     "en": "Next",
     "zh-hans": "下一页"

@@ -1,9 +1,14 @@
 <!-- @/views/Document/Content.vue -->
 <template>
-  <HeaderBar :title="isDocMetaRetrieved ? docMeta?.title : '...'">
+  <HeaderBar
+    v-if="isDocMetaRetrieved"
+    :hide-when-no-history="false"
+    :title="docMeta!.title"
+  >
     <template #actions>
+      <LocaleMenu :locales="docMeta!.locale" />
+
       <DocActionMenu
-        v-if="isRetrieved"
         :content="content!"
         :locale="currentLocale"
         :module="currentModule"
@@ -62,9 +67,10 @@
 </template>
 
 <script setup lang="ts">
+import LocaleMenu from '@/components/Document/LocaleMenu.vue';
+import DocActionMenu from '@/components/Document/DocActionMenu.vue';
 import Breadcrumbs from '@/components/Document/Breadcrumbs.vue';
 import DocMetaBar from '@/components/Document/DocMetaBar.vue';
-import DocActionMenu from '@/components/Document/DocActionMenu.vue';
 import PrevNext from '@/components/Document/PrevNext.vue';
 import LeftAnchor from '@/components/LeftAnchor.vue';
 import DocNav from '@/components/Document/Nav.vue';

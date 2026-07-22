@@ -9,8 +9,8 @@ const { start, done } = useTransitionBar();
 const appRoutes: Array<RouteRecord> = [
   {
     // NOTE: path follows WHATWG URL Pattern Standard
-    // reference.fuyeor.com/en/welcome
-    path: 'welcome',
+    // reference.fuyeor.com/en/
+    path: '',
     name: 'Home',
     component: () => import('@/views/Home.vue'),
     meta: {
@@ -29,24 +29,11 @@ const appRoutes: Array<RouteRecord> = [
       public: true,
     },
   },
-];
-
-// root router
-const routes: Array<RouteRecord> = [
   {
-    // *required* locale prefix wrapper, only allows supported locales
-    // TODO: fix @fuyeor/vue-router match for required locale
-    path: `{/:locale(${LOCALE_REGEX})}?`,
-    component: RouterView,
-    // 将所有应用路由放入 children
-    // 注意：子路由的 path 如果不以 / 开头，会拼接在父路由后面
-    // 例如：/en/thought/123 或 /thought/123
-    children: appRoutes,
-  },
-
-  // 404 路由必须放在最外层，且在最后
-  // 如果 URL 是 /xx/thought/123 (不支持的语言)，正则匹配失败，会落到这里
-  {
+    // /{/:locale(${LOCALE_REGEX})}?/*
+    // not found 必须放 childs 中，因为它没有参数导致无法匹配：
+    // { name: 'NotFound', params: { locale: 'zh-hans' } }
+    // 会引发循环重定向问题
     path: '/*', // 通配符路由，捕获所有未匹配的路径
     name: 'NotFound',
     component: () =>
@@ -58,10 +45,23 @@ const routes: Array<RouteRecord> = [
   },
 ];
 
-// 创建路由实例
+// root router
+const routes: Array<RouteRecord> = [
+  {
+    // *required* locale prefix wrapper, only allows supported locales
+    // 需要可选组，因为用户访问 / 时，Matcher 需要能匹配
+    // 进来之后，beforeEach 守卫才能抓住他重定向到正确的 /{locale}/
+    path: `{/:locale(${LOCALE_REGEX})}?`,
+    component: RouterView,
+    // 将所有应用路由放入 children
+    // 注意：子路由的 path 如果不以 / 开头，会拼接在父路由后面
+    // 例如：/en/thought/123 或 /thought/123
+    children: appRoutes,
+  },
+];
+
 const router = createRouter({ routes });
 
-// 路由守卫
 router.beforeEach(async (to, from) => {
   // 启动顶部进度条
   start();
@@ -73,8 +73,12 @@ router.beforeEach(async (to, from) => {
   const routeLocale = to.params.locale as string | undefined;
 
   // 如果没有语言参数就跳转到语言页
-  if (!routeLocale)
-    return { name: 'Home', params: { locale: localeStore.locale } };
+  if (!routeLocale) {
+    return {
+      name: to.name,
+      params: { ...to.params, locale: localeStore.locale },
+    };
+  }
 
   // 如果路由中有语言参数，且与当前 store 中的不一致，强制切换
   // 这会触发 initializeLocale 中的 loadLocaleMessages，加载新语言包

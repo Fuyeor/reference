@@ -24,6 +24,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           path: reference
+          fetch-depth: 0 # Fetches 100% commit history
+          filter: blob:none # Excludes all historical file content blobs
 
       # 2. Check out the shared Fuyeor Monorepo containing commons/interactify/router
       - name: Checkout Shared Monorepo

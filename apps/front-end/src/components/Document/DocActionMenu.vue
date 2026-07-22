@@ -54,5 +54,11 @@ const actionItems = computed<DropdownItem[]>(() => [
     label: t('doc.menu.edit'),
     action: handleEditOnGitHub,
   },
+  {
+    label: t('doc.menu.print'),
+    action: () => {
+      window.print();
+    },
+  },
 ]);
 </script>

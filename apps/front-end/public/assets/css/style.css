@@ -96,3 +96,38 @@ h3:after {
     padding: 16px;
   }
 }
+
+/* Print as PDF Media Styles */
+@media print {
+  /* Force the browser to fully preserve the original colors and background */
+  * {
+    print-color-adjust: exact;
+  }
+
+  /* Forcefully strip the gray background */
+  body {
+    background: #ffffff;
+  }
+
+  .content-layout {
+    width: 100%;
+    padding: 0;
+    margin: -1.5rem 0.5rem;
+  }
+
+  /* Hide all layout widgets */
+  .header,
+  .fuyeor-breadcrumbs,
+  .doc-meta-container .fuyeor-prev-next-nav {
+    display: none !important;
+  }
+}
+
+.header-actions {
+  gap: 10px;
+  padding-right: 10px;
+
+  .trigger-icon {
+    width: 1.4rem;
+  }
+}
