@@ -1,0 +1,33 @@
+# ==========================================================================
+# Stage 1: Compile the statically-linked Rust binary (Alpine-compatible)
+# ==========================================================================
+FROM rust:alpine AS builder
+
+# Install C-headers required for compiling on Alpine
+RUN apk add --no-cache musl-dev
+
+WORKDIR /app
+
+# Copy the package config of apps/back-end first to cache dependencies
+COPY apps/back-end/Cargo.toml ./
+RUN mkdir src && echo "fn main() {}" > src/main.rs
+RUN cargo build --release
+
+# remove dummy product
+RUN rm -rf src target/release/deps/reference_back* target/release/reference-back*
+
+# Copy the actual backend source code from the monorepo root context
+COPY apps/back-end/src/ ./src/
+RUN cargo build --release
+
+# ==========================================================================
+# Stage 2: Distribute and run the tiny statically-compiled release binary
+# ==========================================================================
+FROM alpine:3.20 AS runner
+
+EXPOSE 3000
+
+# Copy the compiled binary from the builder stage
+COPY --from=builder /app/target/release/reference-back /usr/local/bin/reference-back
+
+CMD ["/usr/local/bin/reference-back"]

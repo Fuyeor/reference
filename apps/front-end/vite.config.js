@@ -16,6 +16,14 @@ export default defineConfig(({ mode }) => {
         fs: {
           allow: [contentDir],
         },
+        proxy: {
+          // proxy to back-end
+          '/v1': {
+            target: 'http://localhost:3000',
+            changeOrigin: true,
+            // rewrite: (path) => path.replace(/^\/v1/, ''),
+          },
+        },
       },
 
       plugins: [

@@ -5,6 +5,9 @@ on:
   push:
     branches:
       - main
+    paths:
+      # Only trigger workflow when backend files are modified
+      - "apps/front-end/**"
 
 env:
   REGISTRY: ghcr.io
@@ -74,6 +77,6 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: . # Build context containing all three repos side-by-side
-          file: ./reference/Dockerfile
+          file: ./reference/Dockerfile.frontend
           push: true # Enables automatic pushing to GHCR
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
