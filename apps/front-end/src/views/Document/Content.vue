@@ -42,6 +42,8 @@
         :items="tocItems"
         :title="t('doc.toc')"
       />
+
+      <RecentlyRead />
     </LayoutAnchor>
 
     <div class="doc-meta-container">
@@ -74,6 +76,7 @@ import DocMetaBar from '@/components/Document/DocMetaBar.vue';
 import PrevNext from '@/components/Document/PrevNext.vue';
 import LeftAnchor from '@/components/LeftAnchor.vue';
 import DocNav from '@/components/Document/Nav.vue';
+import RecentlyRead from '@/components/Document/RecentlyRead.vue';
 
 import { ref, computed, watch, onUnmounted } from 'vue';
 import { useRoute, useRouter } from '@fuyeor/vue-router';
@@ -92,9 +95,11 @@ import {
   useDocMarkdown,
   useDocMeta,
 } from '@/composables/api/useDoc';
+import { useRecentlyRead } from '@/composables/useRecentlyRead';
 import { flattenNavNodes } from '@/utils/tree';
 
 const { t } = useLocale();
+const { addHistory } = useRecentlyRead();
 
 const route = useRoute();
 const router = useRouter();
@@ -131,20 +136,17 @@ const handleTocUpdated = (items: TocItem[]) => {
 
 // set page title
 watch(
-  () => isDocMetaRetrieved.value && structure.isRetrieved.value,
-  (ready) => {
-    if (ready && docMeta.value && structure.data.value) {
-      const pageTitle = docMeta.value.title;
-      const locale = currentLocale.value;
-
-      // extract module localized title
-      const moduleTitle =
-        typeof structure.data.value.title === 'string'
-          ? structure.data.value.title
-          : structure.data.value.title[locale] || currentModule.value;
+  [docMeta, () => structure.isRetrieved.value],
+  ([meta, structureReady]) => {
+    if (meta && structureReady && structure.data.value) {
+      const pageTitle = meta.title;
+      const moduleTitle = structure.data.value.title;
 
       // article title « module
       titleStore.setDynamicSegment(`${pageTitle} « ${moduleTitle}`);
+
+      const fullPath = `/${currentLocale.value}/${currentModule.value}/${currentNavigation.value}`;
+      addHistory(pageTitle, fullPath);
     }
   },
   { immediate: true },

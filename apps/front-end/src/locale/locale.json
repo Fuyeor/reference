@@ -27,6 +27,10 @@
     "en": "Previous",
     "zh-hans": "上一页"
   },
+  "doc.recentlyRead": {
+    "en": "Recently Read",
+    "zh-hans": "最近读过"
+  },
   "doc.toc": {
     "en": "In this article",
     "zh-hans": "文档目录"

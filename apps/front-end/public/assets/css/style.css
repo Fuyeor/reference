@@ -5,6 +5,8 @@
   --width-right-sidebar: 380px;
 
   --text-primary: #111111;
+  --text-secondary: #3f3f3f;
+  --text-accent: #2088e2;
 }
 
 .separator {
@@ -17,6 +19,7 @@
 @media (width >= 1000px) {
   main {
     margin: 20px 0;
+    border: var(--border-subtle);
     border-radius: var(--radius-lg);
     overflow: clip;
   }
@@ -82,18 +85,6 @@ h3:after {
 
   .nav img {
     width: 1.75rem;
-  }
-}
-
-.right-sidebar {
-  padding: 30px 30px 30px 20px;
-
-  h3:after {
-    content: none;
-  }
-
-  .search-bar-container input {
-    padding: 16px;
   }
 }
 

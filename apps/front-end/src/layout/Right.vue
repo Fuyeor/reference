@@ -16,3 +16,21 @@ import { useLocalePath } from '@/composables/useLocalePath';
 
 const localePath = useLocalePath();
 </script>
+
+<style>
+.right-sidebar {
+  padding: 30px 30px 30px 20px;
+
+  h3:after {
+    content: none;
+  }
+
+  .search-bar-container input {
+    padding: 16px;
+  }
+
+  #sidebar-wrapper {
+    padding: 0 10px;
+  }
+}
+</style>

@@ -1,6 +1,6 @@
 <!-- @/components/Document/Breadcrumbs.vue -->
 <template>
-  <nav class="fuyeor-breadcrumbs" aria-label="Breadcrumb">
+  <nav class="fuyeor-breadcrumbs">
     <ol class="breadcrumb-list">
       <li
         v-for="(item, index) in items"
