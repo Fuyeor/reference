@@ -26,6 +26,10 @@ export const MarkdownRenderer = defineAsyncComponent(async () => {
         type: Array as PropType<MarkdownPlugin[]>,
         default: () => [],
       },
+      enableLinkModal: {
+        type: Boolean,
+        default: false,
+      },
     },
 
     // setup 函数负责核心逻辑

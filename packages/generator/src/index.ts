@@ -69,25 +69,25 @@ function scanAndBuildDocMeta(
   contentRoot: string,
 ) {
   const files = fs.readdirSync(dir);
-  const hasMd = files.some((file) => file.endsWith('.md'));
+  const mdFiles = files.filter((file) => file.endsWith('.md'));
 
-  if (hasMd) {
-    const targetMdForGit = path.join(
-      dir,
-      files.find((file) => file.endsWith('.md'))!,
-    );
-    const gitMeta = getGitMetadata(targetMdForGit);
-    const defaultMd = files.find((file) => file.endsWith('.md'))!;
-    const extractedTitle = extractH1Title(path.join(dir, defaultMd));
+  if (mdFiles.length > 0) {
+    const docMeta: Record<string, any> = {};
 
-    const docMeta: DocMeta = {
-      locale: files
-        .filter((file) => file.endsWith('.md'))
-        .map((file) => file.replace('.md', '')),
-      updatedAt: gitMeta.updatedAt,
-      authors: gitMeta.authors,
-      title: extractedTitle,
-    };
+    for (const mdFile of mdFiles) {
+      const locale = mdFile.replace('.md', '');
+      const fullMdPath = path.join(dir, mdFile);
+
+      // Extract specific Git commit history and FFM H1 title for this language version
+      const gitMeta = getGitMetadata(fullMdPath);
+      const extractedTitle = extractH1Title(fullMdPath);
+
+      docMeta[locale] = {
+        title: extractedTitle,
+        updatedAt: gitMeta.updatedAt,
+        authors: gitMeta.authors,
+      };
+    }
 
     const metaOutPath = path.join(dir, 'index.json');
     fs.writeFileSync(metaOutPath, JSON.stringify(docMeta, null, 2), 'utf-8');

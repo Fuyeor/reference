@@ -19,11 +19,16 @@ export interface NavNode {
 }
 
 /**
- * article meta information
+ * single language specialized article metadata
  */
-export interface DocMeta {
+export interface LocalizedDocMeta {
   title: string;
-  locale: string[];
   updatedAt: string;
   authors: string[];
 }
+
+/**
+ * article meta information
+ * E.g., { "zh-hans": { title: "..." }, "en": { title: "..." } }
+ */
+export type DocMeta = Record<string, LocalizedDocMeta>;

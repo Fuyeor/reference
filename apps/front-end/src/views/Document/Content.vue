@@ -3,10 +3,10 @@
   <HeaderBar
     v-if="isDocMetaRetrieved"
     :hide-when-no-history="false"
-    :title="docMeta!.title"
+    :title="currentMeta?.title || '...'"
   >
     <template #actions>
-      <LocaleMenu :locales="docMeta!.locale" />
+      <LocaleMenu :locales="availableLocales" />
 
       <DocActionMenu
         :content="content!"
@@ -51,7 +51,7 @@
 
       <DocMetaBar
         v-if="isDocMetaRetrieved"
-        :meta="docMeta!"
+        :meta="currentMeta!"
         :locale="currentLocale"
       />
     </div>
@@ -134,9 +134,20 @@ const handleTocUpdated = (items: TocItem[]) => {
   tocItems.value = items;
 };
 
+// get LocalizedDocMeta for current language
+const currentMeta = computed(() => {
+  if (!isDocMetaRetrieved.value || !docMeta.value) return null;
+  const locale = currentLocale.value;
+  return docMeta.value[locale] || Object.values(docMeta.value)[0];
+});
+
+const availableLocales = computed<string[]>(() => {
+  return docMeta.value ? Object.keys(docMeta.value) : [];
+});
+
 // set page title
 watch(
-  [docMeta, () => structure.isRetrieved.value],
+  [currentMeta, () => structure.isRetrieved.value],
   ([meta, structureReady]) => {
     if (meta && structureReady && structure.data.value) {
       const pageTitle = meta.title;

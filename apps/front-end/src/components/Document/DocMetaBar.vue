@@ -22,10 +22,10 @@
 <script setup lang="ts">
 import { useDateFormatter } from '@fuyeor/commons';
 import { useLocale } from '@fuyeor/locale';
-import type { DocMeta } from '@/types/doc';
+import type { LocalizedDocMeta } from '@/types/doc';
 
 const props = defineProps<{
-  meta: DocMeta; // Article-level metadata (containing updatedAt and authors)
+  meta: LocalizedDocMeta; // Article-level metadata (containing updatedAt and authors)
   locale: string; // Active locale (e.g. 'zh-hans')
 }>();
 
