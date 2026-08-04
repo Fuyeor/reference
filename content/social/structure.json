@@ -1,0 +1,25 @@
+{
+  "title": {
+    "zh-hans": "Ф 社交",
+    "en": "Ф social"
+  },
+  "description": {
+    "zh-hans": "Ф 社交媒体使用帮助文档，包含 Ф 社交应用的使用说明、功能介绍、常见问题解答等内容。",
+    "en": "Ф social help documentation, including usage instructions, feature descriptions, and frequently asked questions."
+  },
+  "navigation": [
+    { "slug": "overview" },
+    {
+      "slug": "connections",
+      "title": {
+        "zh-hans": "内容同步账号",
+        "en": "Connected Accounts"
+      },
+      "navigation": [
+        { "slug": "bluesky" },
+        { "slug": "telegram" },
+        { "slug": "mastodon" }
+      ]
+    }
+  ]
+}

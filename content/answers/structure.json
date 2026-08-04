@@ -1,0 +1,25 @@
+{
+  "title": {
+    "zh-hans": "Ф 问答",
+    "en": "Ф answers"
+  },
+  "description": {
+    "zh-hans": "Fuyeor Flavored Markdown (FFM) 语法排版规范与技术参考指南。",
+    "en": "Fuyeor Flavored Markdown (FFM) typography specifications and technical references."
+  },
+  "navigation": [
+    { "slug": "overview" },
+    {
+      "slug": "connections",
+      "title": {
+        "zh-hans": "内容同步账号",
+        "en": "Connected Accounts"
+      },
+      "navigation": [
+        { "slug": "bluesky" },
+        { "slug": "telegram" },
+        { "slug": "mastodon" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "title": {
+    "zh-hans": "平台规范",
+    "en": "Platform Guidelines"
+  },
+  "description": {
+    "zh-hans": "Ф 平台守则与政策，包含创作者守则、平台政策等内容。",
+    "en": "Ф guidelines and policies, including creator guidelines and platform policies."
+  },
+  "navigation": [
+    { "slug": "about" },
+    {
+      "slug": "policies",
+      "title": {
+        "zh-hans": "平台政策",
+        "en": "Platform Policies"
+      },
+      "navigation": [
+        { "slug": "accessibility" },
+        { "slug": "cookies" },
+        { "slug": "terms-of-service" },
+        { "slug": "privacy-policy" },
+        { "slug": "no-phone-policy" }
+      ]
+    },
+    {
+      "slug": "guidelines",
+      "title": {
+        "zh-hans": "创作者守则",
+        "en": "Creator Guidelines"
+      },
+      "navigation": [
+        { "slug": "overview" },
+        { "slug": "illegal-content" },
+        { "slug": "harassment-and-abuse" },
+        { "slug": "hate-speech-and-violence" },
+        { "slug": "spamming" },
+        { "slug": "unverified-harmful-content" },
+        { "slug": "destructive-content" }
+      ]
+    }
+  ]
+}
