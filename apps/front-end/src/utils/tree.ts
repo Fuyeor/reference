@@ -24,7 +24,7 @@ export function flattenNavNodes(
       const titleStr =
         typeof node.title === 'string'
           ? node.title
-          : node.title[locale] || node.title['zh-hans'] || node.slug;
+          : node.title[locale] || node.slug;
 
       list.push({ slugPath: currentPath, title: titleStr });
     }

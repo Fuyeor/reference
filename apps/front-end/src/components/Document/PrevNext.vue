@@ -5,7 +5,7 @@
     <!-- Previous Page Card -->
     <div class="nav-card-wrapper left">
       <router-link v-if="prev" :to="prev.path" class="nav-card prev-card">
-        <span class="nav-label">← {{ t('pagination.prev') }}</span>
+        <span class="nav-label">← {{ t('doc.pagination.prev') }}</span>
         <span class="nav-title">{{ prev.title }}</span>
       </router-link>
     </div>
@@ -13,7 +13,7 @@
     <!-- Next Page Card -->
     <div class="nav-card-wrapper right">
       <router-link v-if="next" :to="next.path" class="nav-card next-card">
-        <span class="nav-label">{{ t('pagination.next') }} →</span>
+        <span class="nav-label">{{ t('doc.pagination.next') }} →</span>
         <span class="nav-title">{{ next.title }}</span>
       </router-link>
     </div>

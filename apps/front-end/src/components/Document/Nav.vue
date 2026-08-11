@@ -1,39 +1,20 @@
 <!-- @/components/Document/Nav.vue -->
 <template>
   <div class="sidebar-tree">
-    <template v-for="node in props.navigation" :key="node.slug">
-      <!-- Case A: page like /overview -->
-      <router-link
-        v-if="!node.navigation"
-        class="nav-item"
-        :to="`/${props.locale}/${props.module}/${node.slug}`"
-      >
-        {{ node.title }}
-      </router-link>
-
-      <!-- Case B: folder like /getting-started/ -->
-      <Foldable
-        v-else
-        :title="
-          typeof node.title === 'string' ? node.title : node.title[props.locale]
-        "
-        :model-value="isFolderActive(node.slug)"
-      >
-        <router-link
-          v-for="subNode in node.navigation"
-          class="nav-item sub-item"
-          :key="subNode.slug"
-          :to="`/${props.locale}/${props.module}/${node.slug}/${subNode.slug}`"
-        >
-          {{ subNode.title }}
-        </router-link>
-      </Foldable>
-    </template>
+    <NavItem
+      v-for="node in props.navigation"
+      :key="node.slug"
+      :node="node"
+      :locale="props.locale"
+      :module="props.module"
+      :active-path="props.activePath"
+      :base-path="`/${props.locale}/${props.module}`"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { Foldable } from '@fuyeor/interactify';
+import NavItem from './NavItem.vue';
 import type { NavNode } from '@/types/doc';
 
 const props = defineProps<{
@@ -44,12 +25,6 @@ const props = defineProps<{
   // currently selected physical path (e.g., 'formatter/using')
   activePath: string | null | undefined;
 }>();
-
-const isFolderActive = (folderSlug: string) => {
-  if (!props.activePath) return false;
-  const segments = props.activePath.split('/');
-  return segments.includes(folderSlug);
-};
 </script>
 
 <style>
@@ -70,6 +45,7 @@ const isFolderActive = (folderSlug: string) => {
     padding-left: 16px;
 
     .nav-item {
+      display: block;
       padding: 8px 10px;
     }
   }
