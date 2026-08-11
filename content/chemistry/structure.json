@@ -1,0 +1,40 @@
+{
+  "title": {
+    "zh-hans": "Chemistry API",
+    "en": "Chemistry API"
+  },
+  "description": {
+    "zh-hans": "用于将 SMILES 和 Reaction SMILES 渲染为 SVG 化学结构图的 API。",
+    "en": "An API for rendering SMILES and Reaction SMILES as SVG chemical structures."
+  },
+  "navigation": [
+    { "slug": "overview" },
+    { "slug": "development" },
+    {
+      "slug": "integration",
+      "title": {
+        "zh-hans": "集成指南",
+        "en": "Integration"
+      },
+      "navigation": [
+        { "slug": "embed" },
+        {
+          "slug": "javascript",
+          "title": {
+            "zh-hans": "JavaScript 集成",
+            "en": "JavaScript Integration"
+          },
+          "navigation": [{ "slug": "native" }]
+        }
+      ]
+    },
+    {
+      "slug": "apis",
+      "title": {
+        "zh-hans": "服务端点",
+        "en": "API Reference"
+      },
+      "navigation": [{ "slug": "depict" }]
+    }
+  ]
+}
