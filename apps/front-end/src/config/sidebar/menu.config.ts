@@ -4,7 +4,7 @@ import type { SidebarItemConfig } from '@fuyeor/interactify';
 
 export const signedOutNavItemsRaw: SidebarItemConfig[] = [
   {
-    target: '/welcome',
+    target: '/',
     icon: getIconUrl('home'),
     textKey: 'home',
   },

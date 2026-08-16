@@ -3,7 +3,11 @@ import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
 import { afterEach, describe, expect, it } from 'vitest';
-import { buildContent, resolveModules } from './index';
+import {
+  buildContent,
+  buildModuleIndex,
+  resolveModules,
+} from './index';
 import { parseModuleName } from './start-options';
 
 const temporaryDirectories: string[] = [];
@@ -22,8 +26,14 @@ function createContentFixture(): string {
     fs.writeFileSync(
       path.join(moduleRoot, 'structure.json'),
       JSON.stringify({
-        title: { en: moduleName },
-        description: { en: `${moduleName} description` },
+        title: {
+          en: moduleName === 'ffm' ? 'Zeta Module' : 'Alpha Module',
+          'zh-hans': moduleName,
+        },
+        description: {
+          en: `${moduleName} description`,
+          'zh-hans': `${moduleName} 描述`,
+        },
         navigation: [{ slug: 'overview' }],
       }),
     );
@@ -71,6 +81,34 @@ describe('content module selection', () => {
     expect(() => resolveModules(contentRoot, 'missing')).toThrow(
       'Cannot find content module: missing',
     );
+  });
+
+  it('generates localized module indexes sorted by English title', () => {
+    const contentRoot = createContentFixture();
+
+    buildModuleIndex(contentRoot);
+
+    expect(
+      JSON.parse(
+        fs.readFileSync(path.join(contentRoot, 'index.en.json'), 'utf-8'),
+      ),
+    ).toEqual([
+      {
+        module: 'chemistry',
+        title: 'Alpha Module',
+        description: 'chemistry description',
+      },
+      {
+        module: 'ffm',
+        title: 'Zeta Module',
+        description: 'ffm description',
+      },
+    ]);
+    expect(
+      JSON.parse(
+        fs.readFileSync(path.join(contentRoot, 'index.zh-hans.json'), 'utf-8'),
+      ),
+    ).toHaveLength(2);
   });
 
   it('builds metadata only for the selected module', () => {

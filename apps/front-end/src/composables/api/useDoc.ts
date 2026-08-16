@@ -1,7 +1,16 @@
 // @/composables/api/useDoc.ts
 import { useQuery } from '@fuyeor/vue-query';
-import { fetchContent, fetchContentMeta, fetchStructure } from '@/api/doc';
-import type { ModuleStructure, DocMeta } from '@/types/doc';
+import {
+  fetchContent,
+  fetchContentMeta,
+  fetchModuleIndex,
+  fetchStructure,
+} from '@/api/doc';
+import type {
+  DocMeta,
+  ModuleIndexItem,
+  ModuleStructure,
+} from '@/types/doc';
 
 export const docKeys = {
   all: ['docs'] as const,
@@ -11,7 +20,16 @@ export const docKeys = {
     [...docKeys.all, 'detail', book, path, locale] as const,
   meta: (book: string, path: string) =>
     [...docKeys.all, 'meta', book, path] as const,
+  modules: (locale: string) => [...docKeys.all, 'modules', locale] as const,
 };
+
+export function useModuleIndex(localeGetter: () => string) {
+  return useQuery<ModuleIndexItem[]>({
+    queryKey: () => docKeys.modules(localeGetter()),
+    queryFn: () => fetchModuleIndex(localeGetter()),
+    staleTime: 1000 * 60 * 30,
+  });
+}
 
 export function useModuleStructure(
   moduleGetter: () => string,
@@ -19,11 +37,7 @@ export function useModuleStructure(
 ) {
   return useQuery<ModuleStructure>({
     queryKey: () => docKeys.structure(moduleGetter(), localeGetter()),
-    queryFn: () =>
-      fetchStructure(
-        moduleGetter(),
-        localeGetter(),
-      ) as unknown as Promise<ModuleStructure>,
+    queryFn: () => fetchStructure(moduleGetter(), localeGetter()),
     staleTime: 1000 * 60 * 30,
   });
 }

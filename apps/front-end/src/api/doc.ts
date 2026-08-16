@@ -1,7 +1,20 @@
 // @/api/doc.ts
 import apiClient from '@/api';
-import type { DocMeta, SidebarNode } from '@/types/doc';
+import type {
+  DocMeta,
+  ModuleIndexItem,
+  ModuleStructure,
+} from '@/types/doc';
 import { assertMarkdownContent } from '@/utils/markdown-response';
+
+/** Fetches the localized module index for the home page. */
+export async function fetchModuleIndex(
+  locale: string,
+): Promise<ModuleIndexItem[]> {
+  return await apiClient.get<ModuleIndexItem[]>(
+    `/content/index.${locale}.json`,
+  );
+}
 
 /** Fetches the localized Markdown source for a document. */
 export async function fetchContent(
@@ -29,8 +42,8 @@ export async function fetchContentMeta(
 export async function fetchStructure(
   book: string,
   locale: string,
-): Promise<SidebarNode[]> {
-  return await apiClient.get<SidebarNode[]>(
+): Promise<ModuleStructure> {
+  return await apiClient.get<ModuleStructure>(
     `/content/${book}/structure.${locale}.json`,
   );
 }

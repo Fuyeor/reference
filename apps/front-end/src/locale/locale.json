@@ -55,6 +55,26 @@
     "en": "Search documents...",
     "zh-hans": "搜索文档..."
   },
+  "module.all": {
+    "en": "Explore all modules",
+    "zh-hans": "浏览全部模块"
+  },
+  "module.directory": {
+    "en": "Documentation",
+    "zh-hans": "文档"
+  },
+  "module.empty": {
+    "en": "No modules are available yet.",
+    "zh-hans": "当前还没有可用模块。"
+  },
+  "module.explore": {
+    "en": "Explore module",
+    "zh-hans": "浏览模块"
+  },
+  "module.overview": {
+    "en": "Overview",
+    "zh-hans": "概览"
+  },
   "site.name": {
     "en": "Ф Reference",
     "zh-hans": "Ф Reference"

@@ -7,7 +7,7 @@
   </main>
 
   <!-- 根据是否为移动端来条件渲染右侧边栏 -->
-  <right-sidebar v-if="!isMobile" />
+  <right-sidebar v-if="showRightSidebar" />
 
   <back-top />
 
@@ -19,6 +19,7 @@
 import LeftSidebar from '@/layout/Left.vue';
 
 import { computed } from 'vue';
+import { useRoute } from '@fuyeor/vue-router';
 import { useHeadManager } from '@fuyeor/commons';
 import {
   useFontLoader,
@@ -29,6 +30,10 @@ import {
 import { useAsyncComponents } from '@/composables/loader/useAsyncComponents';
 
 const { isMobile } = useMobileDetection();
+const route = useRoute();
+const showRightSidebar = computed(
+  () => !isMobile.value && route.name !== 'Module',
+);
 
 // get all async components
 const { RightSidebar } = useAsyncComponents();

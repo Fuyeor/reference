@@ -3,6 +3,12 @@
 /**
  * product module JSON structure
  */
+export interface ModuleIndexItem {
+  module: string;
+  title: string;
+  description: string;
+}
+
 export interface ModuleStructure {
   title: string;
   description: string;

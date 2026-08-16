@@ -4,7 +4,10 @@ import path from 'node:path';
 import { extractH1Title } from './utils/markdown';
 import { getGitMetadata } from './utils/git';
 import { CONTENT_ROOT } from './paths';
-import type { NavNode } from '../../apps/front-end/src/types/doc';
+import type {
+  ModuleIndexItem,
+  NavNode,
+} from '../../apps/front-end/src/types/doc';
 
 type LocalizedValue = string | Record<string, string>;
 
@@ -20,6 +23,16 @@ interface RawModuleStructure {
   navigation?: RawNavNode[];
 }
 
+/** Resolves a localized value with a deterministic fallback. */
+function resolveLocalizedValue(
+  value: LocalizedValue | undefined,
+  locale: string,
+  fallback: string,
+): string {
+  if (typeof value === 'string') return value;
+  return value?.[locale] || fallback;
+}
+
 /** Recursively compiles a localized navigation tree. */
 function compileNavigation(
   nodes: RawNavNode[],
@@ -33,10 +46,7 @@ function compileNavigation(
     if (node.navigation && Array.isArray(node.navigation)) {
       return {
         slug: node.slug,
-        title:
-          typeof node.title === 'string'
-            ? node.title
-            : node.title?.[locale] || node.slug,
+        title: resolveLocalizedValue(node.title, locale, node.slug),
         navigation: compileNavigation(
           node.navigation,
           bookDir,
@@ -129,6 +139,57 @@ export function resolveModules(
   return [moduleName];
 }
 
+/** Generates the localized module index used by the home page. */
+export function buildModuleIndex(
+  contentRoot: string = CONTENT_ROOT,
+  locales: readonly string[] = ['en', 'zh-hans'],
+): void {
+  const modules = resolveModules(contentRoot);
+  const entries: Array<{
+    module: string;
+    source: RawModuleStructure;
+  }> = [];
+
+  for (const moduleName of modules) {
+    const structureSourcePath = path.join(contentRoot, moduleName, 'structure.json');
+
+    if (!fs.existsSync(structureSourcePath)) {
+      console.warn(
+        `    ⚠️  Module [${moduleName}] is missing the source "structure.json", omitted from index.`,
+      );
+      continue;
+    }
+
+    entries.push({
+      module: moduleName,
+      source: JSON.parse(
+        fs.readFileSync(structureSourcePath, 'utf-8'),
+      ) as RawModuleStructure,
+    });
+  }
+
+  const collator = new Intl.Collator('en', { sensitivity: 'base' });
+  entries.sort((left, right) => {
+    const titleOrder = collator.compare(
+      resolveLocalizedValue(left.source.title, 'en', left.module),
+      resolveLocalizedValue(right.source.title, 'en', right.module),
+    );
+    return titleOrder || left.module.localeCompare(right.module);
+  });
+
+  for (const locale of locales) {
+    const index: ModuleIndexItem[] = entries.map(({ module, source }) => ({
+      module,
+      title: resolveLocalizedValue(source.title, locale, module),
+      description: resolveLocalizedValue(source.description, locale, ''),
+    }));
+    const indexPath = path.join(contentRoot, `index.${locale}.json`);
+
+    fs.writeFileSync(indexPath, JSON.stringify(index, null, 2), 'utf-8');
+    console.log(`    ✅  Generated module index: ${path.basename(indexPath)}`);
+  }
+}
+
 /** Generates localized structures and page metadata for selected modules. */
 export function buildContent(
   moduleName?: string,
@@ -136,6 +197,8 @@ export function buildContent(
 ): void {
   const locales = ['en', 'zh-hans'];
   const modules = resolveModules(contentRoot, moduleName);
+
+  buildModuleIndex(contentRoot, locales);
 
   console.log(`\n🚀 Scanning document source directory: ${contentRoot}`);
 
@@ -162,14 +225,8 @@ export function buildContent(
 
     for (const locale of locales) {
       const localizedStructure = {
-        title:
-          typeof rawStructure.title === 'string'
-            ? rawStructure.title
-            : rawStructure.title?.[locale] || book,
-        description:
-          typeof rawStructure.description === 'string'
-            ? rawStructure.description
-            : rawStructure.description?.[locale] || '',
+        title: resolveLocalizedValue(rawStructure.title, locale, book),
+        description: resolveLocalizedValue(rawStructure.description, locale, ''),
         navigation: compileNavigation(
           rawStructure.navigation || [],
           bookDir,

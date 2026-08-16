@@ -1,0 +1,27 @@
+[
+  {
+    "module": "chemistry",
+    "title": "Chemistry API",
+    "description": "An API for rendering SMILES and Reaction SMILES as SVG chemical structures."
+  },
+  {
+    "module": "ffm",
+    "title": "FFM Specification",
+    "description": "Fuyeor Flavored Markdown (FFM) typography specifications and technical references."
+  },
+  {
+    "module": "platform",
+    "title": "Platform Guidelines",
+    "description": "Ф guidelines and policies, including creator guidelines and platform policies."
+  },
+  {
+    "module": "answers",
+    "title": "Ф answers",
+    "description": "Fuyeor Flavored Markdown (FFM) typography specifications and technical references."
+  },
+  {
+    "module": "social",
+    "title": "Ф social",
+    "description": "Ф social help documentation, including usage instructions, feature descriptions, and frequently asked questions."
+  }
+]

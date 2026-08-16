@@ -1,0 +1,27 @@
+[
+  {
+    "module": "chemistry",
+    "title": "Chemistry API",
+    "description": "用于将 SMILES 和 Reaction SMILES 渲染为 SVG 化学结构图的 API。"
+  },
+  {
+    "module": "ffm",
+    "title": "FFM 规范",
+    "description": "Fuyeor Flavored Markdown (FFM) 语法排版规范与技术参考指南。"
+  },
+  {
+    "module": "platform",
+    "title": "平台规范",
+    "description": "Ф 平台守则与政策，包含创作者守则、平台政策等内容。"
+  },
+  {
+    "module": "answers",
+    "title": "Ф 问答",
+    "description": "Fuyeor Flavored Markdown (FFM) 语法排版规范与技术参考指南。"
+  },
+  {
+    "module": "social",
+    "title": "Ф 社交",
+    "description": "Ф 社交媒体使用帮助文档，包含 Ф 社交应用的使用说明、功能介绍、常见问题解答等内容。"
+  }
+]
