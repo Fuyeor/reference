@@ -1,7 +1,7 @@
 <!-- @/views/Document/Content.vue -->
 <template>
   <HeaderBar
-    v-if="isDocMetaRetrieved"
+    v-if="isDocMetaRetrieved && !showDocumentNotFound"
     :hide-when-no-history="false"
     :title="currentMeta?.title || '...'"
   >
@@ -17,8 +17,15 @@
     </template>
   </HeaderBar>
 
+  <DocumentNotFound
+    v-if="showDocumentNotFound"
+    :module="currentModule"
+    :navigation="currentNavigation"
+    :available-locales="availableLocales"
+  />
+
   <StateDisplay
-    v-if="!isRetrieved"
+    v-else-if="!isRetrieved"
     :type="status"
     :not-found-title="t('content.notFound')"
     :not-found-message="t('content.notFound.desc')"
@@ -70,6 +77,7 @@
 
 <script setup lang="ts">
 import LocaleMenu from '@/components/Document/LocaleMenu.vue';
+import DocumentNotFound from '@/components/Document/DocumentNotFound.vue';
 import DocActionMenu from '@/components/Document/DocActionMenu.vue';
 import Breadcrumbs from '@/components/Document/Breadcrumbs.vue';
 import DocMetaBar from '@/components/Document/DocMetaBar.vue';
@@ -97,6 +105,7 @@ import {
 } from '@/composables/api/useDoc';
 import { useRecentlyRead } from '@/composables/useRecentlyRead';
 import { flattenNavNodes } from '@/utils/tree';
+import { resolveDocumentState } from '@/utils/document-state';
 
 const { t } = useLocale();
 const { addHistory } = useRecentlyRead();
@@ -125,7 +134,11 @@ const {
   () => currentLocale.value,
 );
 
-const { data: docMeta, isRetrieved: isDocMetaRetrieved } = useDocMeta(
+const {
+  data: docMeta,
+  isRetrieved: isDocMetaRetrieved,
+  isNotFound: isDocMetaNotFound,
+} = useDocMeta(
   () => currentModule.value,
   () => currentNavigation.value,
 );
@@ -145,11 +158,32 @@ const availableLocales = computed<string[]>(() => {
   return docMeta.value ? Object.keys(docMeta.value) : [];
 });
 
+const documentState = computed(() =>
+  resolveDocumentState({
+    meta: docMeta.value,
+    locale: currentLocale.value,
+    isRetrieved: isDocMetaRetrieved.value,
+    isNotFound: isDocMetaNotFound.value,
+  }),
+);
+
+const showDocumentNotFound = computed(() => {
+  return (
+    documentState.value === 'not-found' ||
+    documentState.value === 'locale-missing'
+  );
+});
+
 // set page title
 watch(
-  [currentMeta, () => structure.isRetrieved.value],
-  ([meta, structureReady]) => {
-    if (meta && structureReady && structure.data.value) {
+  [currentMeta, () => structure.isRetrieved.value, documentState],
+  ([meta, structureReady, pageState]) => {
+    if (
+      pageState === 'available' &&
+      meta &&
+      structureReady &&
+      structure.data.value
+    ) {
       const pageTitle = meta.title;
       const moduleTitle = structure.data.value.title;
 

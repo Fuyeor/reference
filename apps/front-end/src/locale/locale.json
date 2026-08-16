@@ -31,6 +31,14 @@
     "en": "Recently Read",
     "zh-hans": "最近读过"
   },
+  "doc.localeMissing": {
+    "en": "This document exists, but is not available in the current language. Available:",
+    "zh-hans": "此文档存在，但没有当前语言版本。存在："
+  },
+  "doc.availableLocales": {
+    "en": "Available languages",
+    "zh-hans": "可用语言"
+  },
   "doc.toc": {
     "en": "In this article",
     "zh-hans": "文档目录"

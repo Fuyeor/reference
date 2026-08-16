@@ -92,6 +92,7 @@ RUN echo 'server { \
     include mime.types; \
     types { text/markdown md; } \
     index index.html; \
+    location ^~ /v1/content/ { try_files $uri =404; } \
     location / { try_files $uri $uri/ /index.html; } \
 }' > /etc/nginx/conf.d/default.conf
 

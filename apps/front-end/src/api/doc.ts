@@ -1,37 +1,31 @@
 // @/api/doc.ts
 import apiClient from '@/api';
 import type { DocMeta, SidebarNode } from '@/types/doc';
+import { assertMarkdownContent } from '@/utils/markdown-response';
 
-/**
- * get merged standard Markdown text
- * /v1/content/ffm/overview/zh-hans.md
- */
-export function fetchContent(
+/** Fetches the localized Markdown source for a document. */
+export async function fetchContent(
   book: string,
   navigation: string,
   locale: string,
 ): Promise<string> {
-  return apiClient.get<string>(`/content/${book}/${navigation}/${locale}.md`);
+  const content = await apiClient.get<string>(
+    `/content/${book}/${navigation}/${locale}.md`,
+  );
+  return assertMarkdownContent(content);
 }
 
-/**
- * get pre-generated page meta data (with authors and git commit time)
- * /v1/content/ffm/overview/index.json
- */
+/** Fetches pre-generated page metadata with authors and Git commit time. */
 export async function fetchContentMeta(
   book: string,
   navigation: string,
 ): Promise<DocMeta> {
-  // return parseFON<DocMeta>(rawText);
   return await apiClient.get<DocMeta>(
     `/content/${book}/${navigation}/index.json`,
   );
 }
 
-/**
- * get structure of a module
- * /v1/content/ffm/sidebar.en.json
- */
+/** Fetches the localized navigation structure for a module. */
 export async function fetchStructure(
   book: string,
   locale: string,
