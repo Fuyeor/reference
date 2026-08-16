@@ -9,6 +9,7 @@ import type {
   NavNode,
   DocMeta,
 } from '../../apps/front-end/src/types/doc';
+import { buildSitemaps } from './sitemap';
 
 /**
  * recursively compile outline tree
@@ -182,6 +183,13 @@ export function buildContent() {
   console.log(
     `\n✨ Successfully processed ${compiledCount} documentation structures.\n`,
   );
+
+  const frontEndDist = path.resolve(
+    import.meta.dirname,
+    '../../../apps/front-end/dist',
+  );
+  buildSitemaps(contentRoot, frontEndDist);
+  console.log(`✨ Generated multilingual sitemaps in ${frontEndDist}.\n`);
 }
 
 try {
