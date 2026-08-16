@@ -6,8 +6,11 @@ on:
     branches:
       - main
     paths:
-      # Only trigger workflow when backend files are modified
-      - "apps/front-end/**"
+      # Trigger deployment when frontend, content, generator, or build configuration changes
+      - 'apps/front-end/**'
+      - 'content/**'
+      - 'packages/generator/**'
+      - 'Dockerfile.frontend'
 
 env:
   REGISTRY: ghcr.io
