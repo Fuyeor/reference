@@ -62,9 +62,13 @@ RUN cd reference && \
 # 8. Build the highly optimized reference-front-end Vue 3.5 CSR application
 RUN cd reference && pnpm --filter @fuyeor/reference-front-end build
 
-# 9. Compile Markdown/FON contents and generate multilingual sitemaps into dist/sitemaps
+# 9. Compile Markdown/FON contents into static JSON artifacts
 RUN cd reference && \
     pnpm --filter @fuyeor/reference-generator start
+
+# 10. Generate multilingual sitemaps into dist/sitemaps
+RUN cd reference && \
+    pnpm --filter @fuyeor/reference-generator sitemap
 
 # ==========================================
 # Stage 2: Deploy and serve via Nginx

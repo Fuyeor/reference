@@ -1,22 +1,28 @@
 // @fuyeor/reference-generator/src/index.ts
 import fs from 'node:fs';
 import path from 'node:path';
-import process from 'node:process';
 import { extractH1Title } from './utils/markdown';
 import { getGitMetadata } from './utils/git';
-import type {
-  ModuleStructure,
-  NavNode,
-  DocMeta,
-} from '../../apps/front-end/src/types/doc';
-import { buildSitemaps } from './sitemap';
+import { CONTENT_ROOT } from './paths';
+import type { NavNode } from '../../apps/front-end/src/types/doc';
 
-/**
- * recursively compile outline tree
- * and localized H1 headings are automatically injected into the leaf nodes.
- */
+type LocalizedValue = string | Record<string, string>;
+
+interface RawNavNode {
+  slug: string;
+  title?: LocalizedValue;
+  navigation?: RawNavNode[];
+}
+
+interface RawModuleStructure {
+  title?: LocalizedValue;
+  description?: LocalizedValue;
+  navigation?: RawNavNode[];
+}
+
+/** Recursively compiles a localized navigation tree. */
 function compileNavigation(
-  nodes: NavNode[],
+  nodes: RawNavNode[],
   bookDir: string,
   accumulatedPath: string,
   locale: string,
@@ -25,13 +31,12 @@ function compileNavigation(
     const nodePath = path.join(accumulatedPath, node.slug);
 
     if (node.navigation && Array.isArray(node.navigation)) {
-      // directory
       return {
         slug: node.slug,
         title:
           typeof node.title === 'string'
             ? node.title
-            : node.title[locale] || node.slug,
+            : node.title?.[locale] || node.slug,
         navigation: compileNavigation(
           node.navigation,
           bookDir,
@@ -39,47 +44,41 @@ function compileNavigation(
           locale,
         ),
       };
-    } else {
-      // article
-      const mdFilePath = path.join(bookDir, nodePath, `${locale}.md`);
-      let title = node.slug;
-
-      if (fs.existsSync(mdFilePath)) {
-        title = extractH1Title(mdFilePath);
-      } else {
-        console.warn(
-          `    ⚠️  Localization file missed: ${path.relative(bookDir, mdFilePath)}`,
-        );
-      }
-
-      return {
-        slug: node.slug,
-        title: title,
-      };
     }
+
+    const mdFilePath = path.join(bookDir, nodePath, `${locale}.md`);
+    let title = node.slug;
+
+    if (fs.existsSync(mdFilePath)) {
+      title = extractH1Title(mdFilePath);
+    } else {
+      console.warn(
+        `    ⚠️  Localization file missed: ${path.relative(bookDir, mdFilePath)}`,
+      );
+    }
+
+    return {
+      slug: node.slug,
+      title,
+    };
   });
 }
 
-/**
- * recursively scan the Page Bundle
- * to generate an index.json file for the page folder containing the md
- */
-function scanAndBuildDocMeta(
-  dir: string,
-  relativePath: string,
-  contentRoot: string,
-) {
-  const files = fs.readdirSync(dir);
-  const mdFiles = files.filter((file) => file.endsWith('.md'));
+/** Recursively writes index.json metadata for directories containing Markdown. */
+function scanAndBuildDocMeta(directory: string, contentRoot: string): void {
+  const entries = fs
+    .readdirSync(directory, { withFileTypes: true })
+    .sort((left, right) => left.name.localeCompare(right.name));
+  const mdFiles = entries
+    .filter((entry) => entry.isFile() && entry.name.endsWith('.md'))
+    .map((entry) => entry.name);
 
   if (mdFiles.length > 0) {
-    const docMeta: Record<string, any> = {};
+    const docMeta: Record<string, unknown> = {};
 
     for (const mdFile of mdFiles) {
-      const locale = mdFile.replace('.md', '');
-      const fullMdPath = path.join(dir, mdFile);
-
-      // Extract specific Git commit history and FFM H1 title for this language version
+      const locale = mdFile.replace(/\.md$/, '');
+      const fullMdPath = path.join(directory, mdFile);
       const gitMeta = getGitMetadata(fullMdPath);
       const extractedTitle = extractH1Title(fullMdPath);
 
@@ -90,52 +89,67 @@ function scanAndBuildDocMeta(
       };
     }
 
-    const metaOutPath = path.join(dir, 'index.json');
+    const metaOutPath = path.join(directory, 'index.json');
     fs.writeFileSync(metaOutPath, JSON.stringify(docMeta, null, 2), 'utf-8');
     console.log(
       `    ✅  Generated: ${path.relative(contentRoot, metaOutPath)}`,
     );
   }
 
-  // recursively scan subdirectories
-  for (const file of files) {
-    const fullPath = path.join(dir, file);
-    if (fs.statSync(fullPath).isDirectory()) {
-      scanAndBuildDocMeta(fullPath, path.join(relativePath, file), contentRoot);
+  for (const entry of entries) {
+    if (entry.isDirectory()) {
+      scanAndBuildDocMeta(path.join(directory, entry.name), contentRoot);
     }
   }
 }
 
-/**
- * build all modules in the entire /content directory
- */
-export function buildContent() {
-  const contentRoot = path.resolve(import.meta.dirname, '../../../content');
-  const locales = ['en', 'zh-hans'];
-
-  console.log('\n🚀 Scanning document source directory:', contentRoot);
-
+/** Resolves all modules or validates a requested module name. */
+export function resolveModules(
+  contentRoot: string = CONTENT_ROOT,
+  moduleName?: string,
+): string[] {
   if (!fs.existsSync(contentRoot)) {
-    throw new Error(`❌ Cannot find /content directory, parsing failed.`);
+    throw new Error(`Cannot find content directory: ${contentRoot}`);
   }
 
-  const books = fs.readdirSync(contentRoot).filter((file) => {
-    return fs.statSync(path.join(contentRoot, file)).isDirectory();
-  });
+  const modules = fs
+    .readdirSync(contentRoot, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name)
+    .sort((left, right) => left.localeCompare(right));
+
+  if (!moduleName) {
+    return modules;
+  }
+
+  if (!modules.includes(moduleName)) {
+    throw new Error(`Cannot find content module: ${moduleName}`);
+  }
+
+  return [moduleName];
+}
+
+/** Generates localized structures and page metadata for selected modules. */
+export function buildContent(
+  moduleName?: string,
+  contentRoot: string = CONTENT_ROOT,
+): void {
+  const locales = ['en', 'zh-hans'];
+  const modules = resolveModules(contentRoot, moduleName);
+
+  console.log(`\n🚀 Scanning document source directory: ${contentRoot}`);
 
   let compiledCount = 0;
 
-  for (const book of books) {
+  for (const book of modules) {
     const bookDir = path.join(contentRoot, book);
     const structureSourcePath = path.join(bookDir, 'structure.json');
 
-    // issue a warning when the source structure.json is missing
-    // but still force the scan to generate index.json
     if (!fs.existsSync(structureSourcePath)) {
       console.warn(
         `    ⚠️  Module [${book}] is missing the source "structure.json", skipped.`,
       );
-      scanAndBuildDocMeta(bookDir, '', contentRoot);
+      scanAndBuildDocMeta(bookDir, contentRoot);
       continue;
     }
 
@@ -144,19 +158,18 @@ export function buildContent() {
 
     const rawStructure = JSON.parse(
       fs.readFileSync(structureSourcePath, 'utf-8'),
-    );
+    ) as RawModuleStructure;
 
-    // 编译生成各语种的大纲
     for (const locale of locales) {
       const localizedStructure = {
         title:
           typeof rawStructure.title === 'string'
             ? rawStructure.title
-            : rawStructure.title[locale] || book,
+            : rawStructure.title?.[locale] || book,
         description:
           typeof rawStructure.description === 'string'
             ? rawStructure.description
-            : rawStructure.description[locale] || '',
+            : rawStructure.description?.[locale] || '',
         navigation: compileNavigation(
           rawStructure.navigation || [],
           bookDir,
@@ -176,28 +189,10 @@ export function buildContent() {
       );
     }
 
-    // scan subdirectories to generate index.json
-    scanAndBuildDocMeta(bookDir, '', contentRoot);
+    scanAndBuildDocMeta(bookDir, contentRoot);
   }
 
   console.log(
     `\n✨ Successfully processed ${compiledCount} documentation structures.\n`,
   );
-
-  const frontEndDist = path.resolve(
-    import.meta.dirname,
-    '../../../apps/front-end/dist',
-  );
-  buildSitemaps(contentRoot, frontEndDist);
-  console.log(`✨ Generated multilingual sitemaps in ${frontEndDist}.\n`);
-}
-
-try {
-  buildContent();
-} catch (err: any) {
-  console.error(
-    '\n❌ Automatic generation resulted in a fatal error:',
-    err.message,
-  );
-  process.exit(1);
 }

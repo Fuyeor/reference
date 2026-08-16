@@ -1,3 +1,4 @@
+// @fuyeor/reference-generator/src/sitemap.ts
 import fs from 'node:fs';
 import path from 'node:path';
 
