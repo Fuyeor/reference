@@ -28,14 +28,9 @@ COPY reference/ ./reference/
 COPY reference/bin/locale-cli /usr/local/bin/locale-cli
 RUN chmod +x /usr/local/bin/locale-cli
 
-# 6. Workaround path compatibility for locale-cli, then generate localized bundles
-RUN cd reference/apps && \
-    mkdir -p reference && \
-    cd reference && \
-    ln -s ../front-end front-end && \
-    cd ../../ && \
-    locale-cli make reference --prod && \
-    locale-cli make reference manifest
+# 6. Generate localized bundles
+RUN cd reference && \
+    locale-cli make reference --prod
 
 # 7. Build the generator CLI
 RUN cd reference && \
