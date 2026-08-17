@@ -1,5 +1,10 @@
 [
   {
+    "module": "fpm",
+    "title": "FPM Package Publishing",
+    "description": "Getting started, publishing workflows, and CLI reference for the FPM package registry."
+  },
+  {
     "module": "chemistry",
     "title": "Chemistry API",
     "description": "An API for rendering SMILES and Reaction SMILES as SVG chemical structures."

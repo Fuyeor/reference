@@ -1,5 +1,10 @@
 [
   {
+    "module": "fpm",
+    "title": "FPM 包发布工具",
+    "description": "FPM 包注册表的快速上手、发布流程和 CLI 参考。"
+  },
+  {
     "module": "chemistry",
     "title": "Chemistry API",
     "description": "用于将 SMILES 和 Reaction SMILES 渲染为 SVG 化学结构图的 API。"
