@@ -48,7 +48,7 @@ jobs:
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
-          password: ${{ secrets.FUYEOR_DEPLOY_TOKEN }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       # 5.5 Extract the private locale-cli binary directly on the host runner
       - name: Extract locale-cli binary
