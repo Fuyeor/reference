@@ -10,7 +10,7 @@
 
       <DocActionMenu
         :content="content!"
-        :locale="currentLocale"
+        :locale="contentLocale"
         :module="currentModule"
         :navigation="currentNavigation"
       />
@@ -106,6 +106,7 @@ import {
 import { useRecentlyRead } from '@/composables/useRecentlyRead';
 import { flattenNavNodes } from '@/utils/tree';
 import { resolveDocumentState } from '@/utils/document-state';
+import { getAvailableLocales, getContentLocale } from '@/config/locales';
 
 const { t } = useLocale();
 const { addHistory } = useRecentlyRead();
@@ -115,13 +116,14 @@ const router = useRouter();
 const titleStore = useTitleStore();
 const tocItems = ref<TocItem[]>([]);
 
-const currentLocale = computed(() => route.params.locale);
-const currentModule = computed(() => route.params.module);
-const currentNavigation = computed(() => route.params.navigation);
+const currentLocale = computed(() => String(route.params.locale));
+const contentLocale = computed(() => getContentLocale(currentLocale.value));
+const currentModule = computed(() => String(route.params.module));
+const currentNavigation = computed(() => String(route.params.navigation));
 
 const structure = useModuleStructure(
   () => currentModule.value,
-  () => currentLocale.value,
+  () => contentLocale.value,
 );
 
 const {
@@ -131,7 +133,7 @@ const {
 } = useDocMarkdown(
   () => currentModule.value,
   () => currentNavigation.value,
-  () => currentLocale.value,
+  () => contentLocale.value,
 );
 
 const {
@@ -150,18 +152,18 @@ const handleTocUpdated = (items: TocItem[]) => {
 // get LocalizedDocMeta for current language
 const currentMeta = computed(() => {
   if (!isDocMetaRetrieved.value || !docMeta.value) return null;
-  const locale = currentLocale.value;
+  const locale = contentLocale.value;
   return docMeta.value[locale] || Object.values(docMeta.value)[0];
 });
 
-const availableLocales = computed<string[]>(() => {
-  return docMeta.value ? Object.keys(docMeta.value) : [];
-});
+const availableLocales = computed<string[]>(() =>
+  getAvailableLocales(docMeta.value ? Object.keys(docMeta.value) : []),
+);
 
 const documentState = computed(() =>
   resolveDocumentState({
     meta: docMeta.value,
-    locale: currentLocale.value,
+    locale: contentLocale.value,
     isRetrieved: isDocMetaRetrieved.value,
     isNotFound: isDocMetaNotFound.value,
   }),
