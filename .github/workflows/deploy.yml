@@ -33,22 +33,7 @@ jobs:
           fetch-depth: 0 # Fetches 100% commit history
           filter: blob:none # Excludes all historical file content blobs
 
-      # 2. Check out the shared Fuyeor Monorepo containing commons/interactify/router
-      - name: Checkout Shared Monorepo
-        uses: actions/checkout@v4
-        with:
-          repository: Fuyeor/monorepo
-          token: ${{ secrets.FUYEOR_DEPLOY_TOKEN }}
-          path: monorepo
-
-      # 3. Check out the FFM parser repository
-      - name: Checkout Markdown Parser Repository
-        uses: actions/checkout@v4
-        with:
-          repository: Fuyeor/markdown-parser
-          path: markdown-parser
-
-      # 3.5 Dynamic Lowercase Injection
+      # 2.5 Dynamic Lowercase Injection
       - name: Lowercase Repository Name
         run: |
           echo "IMAGE_NAME=${GITHUB_REPOSITORY,,}" >> ${GITHUB_ENV}
@@ -79,7 +64,7 @@ jobs:
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v5
         with:
-          context: . # Build context containing all three repos side-by-side
+          context: . # Build context containing the reference repository and locale-cli binary
           file: ./reference/Dockerfile.frontend
           push: true # Enables automatic pushing to GHCR
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest

@@ -16,7 +16,7 @@ RUN cargo build --release
 # remove dummy product
 RUN rm -rf src target/release/deps/reference_back* target/release/reference-back*
 
-# Copy the actual backend source code from the monorepo root context
+# Copy the actual backend source code from the reference repository context
 COPY apps/back-end/src/ ./src/
 RUN cargo build --release
 
