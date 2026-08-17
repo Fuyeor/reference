@@ -3,6 +3,14 @@
     "en": "Authors",
     "zh-hans": "文档作者"
   },
+  "doc.availableLocales": {
+    "en": "Available languages",
+    "zh-hans": "可用语言"
+  },
+  "doc.localeMissing": {
+    "en": "This document exists, but is not available in the current language. Available:",
+    "zh-hans": "此文档存在，但没有当前语言版本。存在："
+  },
   "doc.menu.copyMarkdown": {
     "en": "Copy Content",
     "zh-hans": "复制内容"
@@ -31,14 +39,6 @@
     "en": "Recently Read",
     "zh-hans": "最近读过"
   },
-  "doc.localeMissing": {
-    "en": "This document exists, but is not available in the current language. Available:",
-    "zh-hans": "此文档存在，但没有当前语言版本。存在："
-  },
-  "doc.availableLocales": {
-    "en": "Available languages",
-    "zh-hans": "可用语言"
-  },
   "doc.toc": {
     "en": "In this article",
     "zh-hans": "文档目录"
@@ -50,10 +50,6 @@
   "intro.title": {
     "en": "Ф Reference",
     "zh-hans": "Ф Reference"
-  },
-  "search.placeholder": {
-    "en": "Search documents...",
-    "zh-hans": "搜索文档..."
   },
   "module.all": {
     "en": "Explore all modules",
@@ -74,6 +70,10 @@
   "module.overview": {
     "en": "Overview",
     "zh-hans": "概览"
+  },
+  "search.placeholder": {
+    "en": "Search documents...",
+    "zh-hans": "搜索文档..."
   },
   "site.name": {
     "en": "Ф Reference",

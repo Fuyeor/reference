@@ -24,20 +24,11 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
 # 4. Copy the complete source code of the reference repository.
 COPY reference/ ./reference/
 
-# 5. Copy the pre-extracted locale-cli binary from our build context
-COPY reference/bin/locale-cli /usr/local/bin/locale-cli
-RUN chmod +x /usr/local/bin/locale-cli
+# 5. Generate localized bundles
+RUN cd reference && \
+    pnpm locale make reference --prod
 
-# 6. Workaround path compatibility for locale-cli, then generate localized bundles
-RUN cd reference/apps && \
-    mkdir -p reference && \
-    cd reference && \
-    ln -s ../front-end front-end && \
-    cd ../../ && \
-    locale-cli make reference --prod && \
-    locale-cli make reference manifest
-
-# 7. Build the generator CLI
+# 6. Build the generator CLI
 RUN cd reference && \
     pnpm --filter @fuyeor/reference-generator build
 

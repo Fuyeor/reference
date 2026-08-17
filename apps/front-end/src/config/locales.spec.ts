@@ -1,6 +1,10 @@
 // @/config/locales.spec.ts
 import { describe, expect, it } from 'vitest';
-import { getAvailableLocales, getLocaleName } from './locales';
+import {
+  getAvailableLocales,
+  getContentLocale,
+  getLocaleName,
+} from './locales';
 
 describe('getAvailableLocales', () => {
   it('adds the online-converted zh-hant locale after zh-hans', () => {
@@ -16,6 +20,17 @@ describe('getAvailableLocales', () => {
       'zh-hans',
       'zh-hant',
     ]);
+  });
+});
+
+describe('getContentLocale', () => {
+  it('maps the automatically converted traditional Chinese locale to simplified Chinese content', () => {
+    expect(getContentLocale('zh-hant')).toBe('zh-hans');
+  });
+
+  it('keeps physical content locales unchanged', () => {
+    expect(getContentLocale('en')).toBe('en');
+    expect(getContentLocale('zh-hans')).toBe('zh-hans');
   });
 });
 

@@ -30,6 +30,11 @@ export function getAvailableLocales(locales: readonly string[]): string[] {
   return available;
 }
 
+/** Resolves an automatically converted locale to its physical content locale. */
+export function getContentLocale(locale: string): string {
+  return locale === 'zh-hant' ? 'zh-hans' : locale;
+}
+
 /** Returns a stable display label for a locale code. */
 export function getLocaleName(locale: string): string {
   return LOCALE_NAMES[locale as SupportedLocale] || locale;
