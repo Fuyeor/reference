@@ -10,37 +10,19 @@ RUN corepack enable
 WORKDIR /app
 
 # 1. Copy workspace configurations to root
-COPY reference/package.json reference/pnpm-lock.yaml reference/pnpm-workspace.yaml ./reference/
-COPY monorepo/package.json ./monorepo/
-COPY markdown-parser/package.json ./markdown-parser/
+COPY reference/package.json reference/pnpm-lock.yaml reference/pnpm-workspace.yaml reference/.npmrc ./reference/
 
 # 2. Copy individual package.json files for aggressive dependency caching.
-# This prevents cache invalidation and guarantees all dependencies (like esbuild) are fully installed
-
-# Fuyeor Reference Repositories
+# This prevents cache invalidation and guarantees all dependencies (like esbuild) are fully installed.
 COPY reference/apps/front-end/package.json ./reference/apps/front-end/
 COPY reference/packages/generator/package.json ./reference/packages/generator/
-
-# Shared Monorepo Repositories
-COPY monorepo/packages/commons/package.json ./monorepo/packages/commons/
-COPY monorepo/packages/interactify/package.json ./monorepo/packages/interactify/
-COPY monorepo/packages/vue-query/package.json ./monorepo/packages/vue-query/
-COPY monorepo/packages/vue-router/package.json ./monorepo/packages/vue-router/
-COPY monorepo/packages/locale/package.json ./monorepo/packages/locale/
-COPY monorepo/packages/config/package.json ./monorepo/packages/config/
-
-# Markdown Parser Repositories
-COPY markdown-parser/packages/markdown-parser/package.json ./markdown-parser/packages/markdown-parser/
-COPY markdown-parser/packages/markdown-parser-vue/package.json ./markdown-parser/packages/markdown-parser-vue/
 
 # 3. Cache and install dependencies across the workspace using pnpm store
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
     cd reference && pnpm install --frozen-lockfile
 
-# 4. Copy the complete source code of all three repositories
+# 4. Copy the complete source code of the reference repository.
 COPY reference/ ./reference/
-COPY monorepo/ ./monorepo/
-COPY markdown-parser/ ./markdown-parser/
 
 # 5. Copy the pre-extracted locale-cli binary from our build context
 COPY reference/bin/locale-cli /usr/local/bin/locale-cli
