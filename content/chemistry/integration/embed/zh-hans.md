@@ -4,7 +4,7 @@
 
 ## Fuyeor Flavored Markdown
 
-如果平台支持 [Fuyeor Flavored Markdown](/ffm/overview)，则可以使用 `smiles` 代码块直接内联渲染结构式；逐行列出 SMILES 字符串即可生成多个图表。此外，可以在 [Playground](https://flavored.fuyeor.com/) 测试渲染效果。
+如果平台支持 [Fuyeor Flavored Markdown](/ffm/overview)，则可以使用 `smiles` 代码块渲染结构式。逐行列出 SMILES 字符串即可生成多个图表：
 
 ````ffm
 ```smiles
@@ -12,6 +12,18 @@ CCO
 CC(=O)OC1=CC=CC=C1C(=O)O
 ```
 ````
+
+此外，还可以使用行内注解（`` #[smiles=`分子式`] ``）在段落中直接插入结构式：
+
+```ffm
+咖啡因（分子式：#[smiles = `CN1C=NC2=C1C(=O)N(C(=O)N2C)C`]）能通过阻断腺苷受体让人保持清醒。
+```
+
+**🌟 注意事项：**
+
+- 行内注解中的所有符号（如 `#`、`[`、`]`、`=`）必须使用半角字符。
+- SMILES 字符串必须用反引号（`` ` ``）包裹，与代码块语法一致。
+- 你可以在 [FFM 试验场](https://flavored.fuyeor.com/) 测试渲染效果。
 
 ## Common Markdown
 

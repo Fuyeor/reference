@@ -4,7 +4,7 @@ You can embed chemical structure diagrams directly into documents, forums, and w
 
 ## Fuyeor Flavored Markdown
 
-If your platform supports [Fuyeor Flavored Markdown](/ffm/overview), you can use the `smiles` code block to render structures inline. List one SMILES string per line to generate multiple diagrams. You can also test the rendering effect in the [Playground](https://flavored.fuyeor.com/).
+If your platform supports [Fuyeor Flavored Markdown](/ffm/overview), you can use the `smiles` code block to render chemical structures. List one SMILES string per line to generate multiple diagrams:
 
 ````ffm
 ```smiles
@@ -12,6 +12,17 @@ CCO
 CC(=O)OC1=CC=CC=C1C(=O)O
 ```
 ````
+
+You can also use an inline annotation (`` #[smiles=`molecule`] ``) to insert a structure directly within a paragraph:
+
+```ffm
+Caffeine (formula: #[smiles = `CN1C=NC2=C1C(=O)N(C(=O)N2C)C`]) keeps you awake by blocking adenosine receptors.
+```
+
+**🌟 NOTE:**
+
+- The SMILES string must be wrapped in backticks (`` ` ``), consistent with the code block syntax.
+- You can test the rendering effect in the [FFM Playground](https://flavored.fuyeor.com/).
 
 ## Common Markdown
 

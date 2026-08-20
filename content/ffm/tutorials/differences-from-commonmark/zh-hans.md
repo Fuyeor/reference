@@ -13,9 +13,9 @@ FFM 和 CommonMark 是两种语法有交集但在设计哲学上不同的 Markdo
 
 CommonMark 中使用连续底线（如 `===` 或 `---`）声明 H1/H2 的语法，经常会导致因文本分隔线和文字没有换 2 行而触发意外标题的错误，且仅支持前两级标题。FFM 使用井号标题语法（即以 `#` 开头）。
 
-**内联 HTML（Inline HTML）**
+**HTML 及其实体（HTML/HTML Entity）**
 
-CommonMark 建议在文档中使用 HTML，而 FFM 完全不支持任何 HTML 渲染。
+CommonMark 建议在文档中使用 HTML，而 FFM 完全不支持任何 HTML 渲染，包括 HTML 实体。
 
 此举旨在提升兼容性，避免耦合浏览器引擎，以及彻底避免跨站脚本攻击（XSS），并确保文档解析引擎的绝对可预测性。
 

@@ -17,7 +17,18 @@
       },
       "navigation": [
         { "slug": "overview" },
-        { "slug": "getting-started" },
+        {
+          "slug": "syntax",
+          "title": {
+            "zh-hans": "语法手册",
+            "en": "Syntax Guide"
+          },
+          "navigation": [
+            { "slug": "basic" },
+            { "slug": "advanced" },
+            { "slug": "extensions" }
+          ]
+        },
         { "slug": "differences-from-commonmark" },
         { "slug": "prompts" }
       ]

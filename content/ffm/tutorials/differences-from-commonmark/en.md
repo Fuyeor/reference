@@ -13,9 +13,9 @@ Below are the core CommonMark features that FFM does not support:
 
 In CommonMark, using underlines (e.g., `===` or `---`) to declare H1/H2 frequently causes accidental headings when a separator is not separated by two line breaks from the text above. Moreover, it only supports the first two heading levels. FFM uses ATX heading syntax (i.e., starting with `#`).
 
-**Inline HTML**
+**HTML or HTML Entities**
 
-CommonMark allows HTML in documents, whereas FFM completely forbids any HTML rendering.
+CommonMark allows HTML in documents, whereas FFM does not support any HTML rendering at all, including HTML entities.
 
 This decision improves compatibility, avoids tight coupling with browser engines, entirely eliminates cross-site scripting (XSS) attacks, and guarantees absolute predictability of the document parser.
 
