@@ -1,0 +1,37 @@
+{
+  "title": {
+    "zh-hans": "FPM 包发布工具",
+    "en": "FPM Package Publishing"
+  },
+  "description": {
+    "zh-hans": "FPM 包注册表与命令行发布工具的入门、操作指南和 CLI 参考。",
+    "en": "Getting started, how-to guides, and CLI reference for the FPM package registry and publishing tool."
+  },
+  "navigation": [
+    { "slug": "overview" },
+    {
+      "slug": "tutorials",
+      "title": {
+        "zh-hans": "教程",
+        "en": "Tutorials"
+      },
+      "navigation": [{ "slug": "getting-started" }]
+    },
+    {
+      "slug": "how-to",
+      "title": {
+        "zh-hans": "操作指南",
+        "en": "How-to guides"
+      },
+      "navigation": [{ "slug": "publish" }]
+    },
+    {
+      "slug": "reference",
+      "title": {
+        "zh-hans": "参考",
+        "en": "Reference"
+      },
+      "navigation": [{ "slug": "cli" }]
+    }
+  ]
+}
