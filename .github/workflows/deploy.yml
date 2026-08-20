@@ -50,17 +50,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # 5.5 Extract the private locale-cli binary directly on the host runner
-      - name: Extract locale-cli binary
-        run: |
-          docker pull ghcr.io/fuyeor/locale-cli:latest
-          docker create --name temp-locale-cli ghcr.io/fuyeor/locale-cli:latest
-          mkdir -p reference/bin
-          docker cp temp-locale-cli:/usr/local/bin/locale-cli reference/bin/locale-cli
-          docker rm temp-locale-cli
-          chmod +x reference/bin/locale-cli
-
-      # 6. Build, Package, and automatically PUSH the image to GHCR
+      # 5. Build, package, and automatically push the image to GHCR
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v5
         with:

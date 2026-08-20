@@ -1,4 +1,4 @@
-// @/views/Document/Module.vue
+<!-- @/views/Document/Module.vue -->
 <template>
   <StateDisplay
     v-if="!isRetrieved"
@@ -30,9 +30,7 @@
               :key="node.slug"
               :node="node"
               :base-path="
-                item.id === 'overview'
-                  ? basePath
-                  : `${basePath}/${item.id}`
+                item.id === 'overview' ? basePath : `${basePath}/${item.id}`
               "
             />
           </ul>
@@ -62,6 +60,7 @@ import LeftAnchor from '@/components/LeftAnchor.vue';
 import DocNav from '@/components/Document/Nav.vue';
 import ModuleDirectoryItem from '@/components/Document/ModuleDirectoryItem.vue';
 import { useModuleStructure } from '@/composables/api/useDoc';
+import { getContentLocale } from '@/config/locales';
 import { buildModuleDirectorySections } from '@/utils/module-directory';
 
 const route = useRoute();
@@ -70,9 +69,7 @@ const { t } = useLocale();
 const titleStore = useTitleStore();
 
 const currentLocale = computed(() => String(route.params.locale));
-const contentLocale = computed(() =>
-  currentLocale.value === 'zh-hant' ? 'zh-hans' : currentLocale.value,
-);
+const contentLocale = computed(() => getContentLocale(currentLocale.value));
 const currentModule = computed(() => String(route.params.module));
 const basePath = computed(
   () => `/${currentLocale.value}/${currentModule.value}`,

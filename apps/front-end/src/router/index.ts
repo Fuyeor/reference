@@ -21,7 +21,8 @@ const appRoutes: Array<RouteRecord> = [
   {
     // reference.fuyeor.com/:locale/:module
     // Module directory landing page, such as /en/ffm.
-    path: ':module',
+    // `([a-z]{3,})` prevents conflicts with the locale prefix
+    path: ':module([a-z]{3,})',
     name: 'Module',
     component: () => import('@/views/Document/Module.vue'),
     meta: {
@@ -58,19 +59,14 @@ const appRoutes: Array<RouteRecord> = [
 // root router
 const routes: Array<RouteRecord> = [
   {
-    // Root path is handled by the locale guard before rendering a page.
-    path: '',
-    name: 'Root',
+    // *required* locale prefix wrapper, only allows supported locales
+    // 需要可选组，因为用户访问 / 时，Matcher 需要能匹配
+    // 进来之后，beforeEach 守卫才能抓住他重定向到正确的 /{locale}/
+    path: `{/:locale(${LOCALE_REGEX})}?`,
     component: RouterView,
-    meta: {
-      public: true,
-    },
-  },
-  {
-    // Locale is required here to prevent dynamic module routes from consuming it.
-    path: `/:locale(${LOCALE_REGEX})`,
-    component: RouterView,
-    // All application routes live below the locale prefix.
+    // 将所有应用路由放入 children
+    // 注意：子路由的 path 如果不以 / 开头，会拼接在父路由后面
+    // 例如：/en/thought/123 或 /thought/123
     children: appRoutes,
   },
 ];
@@ -87,10 +83,10 @@ router.beforeEach(async (to, from) => {
   // 从路由参数中获取 locale (例如 'en' 或 undefined)
   const routeLocale = to.params.locale as string | undefined;
 
-  // Redirect the root route to the localized home page.
+  // 如果没有语言参数就跳转到语言页
   if (!routeLocale) {
     return {
-      name: 'Home',
+      name: to.name,
       params: { ...to.params, locale: localeStore.locale },
     };
   }

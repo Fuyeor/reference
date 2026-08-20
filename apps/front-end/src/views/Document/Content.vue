@@ -10,7 +10,8 @@
 
       <DocActionMenu
         :content="content!"
-        :locale="contentLocale"
+        :locale="currentLocale"
+        :content-locale="contentLocale"
         :module="currentModule"
         :navigation="currentNavigation"
       />
@@ -133,7 +134,7 @@ const {
 } = useDocMarkdown(
   () => currentModule.value,
   () => currentNavigation.value,
-  () => contentLocale.value,
+  () => currentLocale.value,
 );
 
 const {

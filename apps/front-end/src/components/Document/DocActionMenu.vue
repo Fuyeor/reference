@@ -10,7 +10,8 @@ import { useToast, DropdownMenu, type DropdownItem } from '@fuyeor/interactify';
 
 const props = defineProps<{
   content: string; // The raw compiled markdown string
-  locale: string; // Active locale (e.g. 'zh-hans')
+  locale: string; // Visible route locale, including converter-backed locales
+  contentLocale: string; // Physical repository locale used by GitHub links
   module: string; // Current module name (e.g. 'ffm')
   navigation: string; // Current content path (e.g. 'overview')
 }>();
@@ -36,7 +37,7 @@ const handleOpenRawMarkdown = () => {
 
 // Navigate directly to GitHub's web editor for instant community contribution
 const handleEditOnGitHub = () => {
-  const gitHubEditUrl = `https://github.com/Fuyeor/reference/blob/main/content/${props.module}/${props.navigation}/${props.locale}.md`;
+  const gitHubEditUrl = `https://github.com/Fuyeor/reference/blob/main/content/${props.module}/${props.navigation}/${props.contentLocale}.md`;
   window.open(gitHubEditUrl, '_blank');
 };
 

@@ -1,4 +1,4 @@
-// @/views/Home.vue
+<!-- @/views/Home.vue -->
 <template>
   <locale-switcher
     :supported-locales="SUPPORTED_LOCALES"
@@ -48,7 +48,7 @@ import { computed } from 'vue';
 import { useRoute, useRouter } from '@fuyeor/vue-router';
 import { useLocale } from '@fuyeor/locale';
 import { LocaleSwitcher, SearchBar } from '@fuyeor/interactify';
-import { SUPPORTED_LOCALES } from '@/config/locales';
+import { getContentLocale, SUPPORTED_LOCALES } from '@/config/locales';
 import { useModuleIndex } from '@/composables/api/useDoc';
 
 const route = useRoute();
@@ -56,9 +56,7 @@ const router = useRouter();
 
 const { t } = useLocale();
 const currentLocale = computed(() => String(route.params.locale));
-const contentLocale = computed(() =>
-  currentLocale.value === 'zh-hant' ? 'zh-hans' : currentLocale.value,
-);
+const contentLocale = computed(() => getContentLocale(currentLocale.value));
 const { data: moduleIndex } = useModuleIndex(() => contentLocale.value);
 const moduleCards = computed(() => moduleIndex.value ?? []);
 
