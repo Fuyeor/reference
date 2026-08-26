@@ -57,16 +57,17 @@ describe('start CLI options', () => {
     expect(parseModuleName([])).toBeUndefined();
   });
 
-  it('parses the module selector', () => {
+  it('parses the short and long module selectors', () => {
+    expect(parseModuleName(['--m=ffm'])).toBe('ffm');
     expect(parseModuleName(['--module=ffm'])).toBe('ffm');
-    expect(parseModuleName(['--', '--module=ffm'])).toBe('ffm');
+    expect(parseModuleName(['--', '--m=ffm'])).toBe('ffm');
   });
 
   it('rejects unsupported option forms', () => {
-    expect(() => parseModuleName(['--module', 'ffm'])).toThrow(
-      'Usage: start [--module={name}]',
+    expect(() => parseModuleName(['--m', 'ffm'])).toThrow(
+      'Usage: start [--m={name}]',
     );
-    expect(() => parseModuleName(['--module='])).toThrow(
+    expect(() => parseModuleName(['--m='])).toThrow(
       'Module name cannot be empty.',
     );
   });
@@ -111,8 +112,45 @@ describe('content module selection', () => {
     ).toHaveLength(2);
   });
 
+  it('builds all module metadata when no module is selected', () => {
+    const contentRoot = createContentFixture();
+
+    buildContent(undefined, contentRoot);
+
+    expect(fs.existsSync(path.join(contentRoot, 'index.en.json'))).toBe(true);
+    expect(
+      fs.existsSync(path.join(contentRoot, 'ffm', 'structure.en.json')),
+    ).toBe(true);
+    expect(
+      fs.existsSync(path.join(contentRoot, 'chemistry', 'structure.en.json')),
+    ).toBe(true);
+    expect(
+      fs.existsSync(path.join(contentRoot, 'ffm', 'overview', 'index.json')),
+    ).toBe(true);
+    expect(
+      fs.existsSync(
+        path.join(contentRoot, 'chemistry', 'overview', 'index.json'),
+      ),
+    ).toBe(true);
+  });
+
   it('builds metadata only for the selected module', () => {
     const contentRoot = createContentFixture();
+    const rootIndexPath = path.join(contentRoot, 'index.en.json');
+    const chemistryStructurePath = path.join(
+      contentRoot,
+      'chemistry',
+      'structure.en.json',
+    );
+    const chemistryDocMetaPath = path.join(
+      contentRoot,
+      'chemistry',
+      'overview',
+      'index.json',
+    );
+    fs.writeFileSync(rootIndexPath, 'existing module index');
+    fs.writeFileSync(chemistryStructurePath, 'existing chemistry structure');
+    fs.writeFileSync(chemistryDocMetaPath, 'existing chemistry metadata');
 
     buildContent('ffm', contentRoot);
 
@@ -122,13 +160,14 @@ describe('content module selection', () => {
     expect(
       fs.existsSync(path.join(contentRoot, 'ffm', 'overview', 'index.json')),
     ).toBe(true);
-    expect(
-      fs.existsSync(path.join(contentRoot, 'chemistry', 'structure.en.json')),
-    ).toBe(false);
-    expect(
-      fs.existsSync(
-        path.join(contentRoot, 'chemistry', 'overview', 'index.json'),
-      ),
-    ).toBe(false);
+    expect(fs.readFileSync(rootIndexPath, 'utf-8')).toBe(
+      'existing module index',
+    );
+    expect(fs.readFileSync(chemistryStructurePath, 'utf-8')).toBe(
+      'existing chemistry structure',
+    );
+    expect(fs.readFileSync(chemistryDocMetaPath, 'utf-8')).toBe(
+      'existing chemistry metadata',
+    );
   });
 });

@@ -8,15 +8,20 @@ All documentation content is managed within the `/content/` directory.
 
 ### Documentation Generation
 
-Run `build` to generate the documentation builder, then run the start command to produce the `structure.json` files for each language:
+Run `build` to generate the documentation builder, then run the start command to produce localized structure and document metadata JSON artifacts:
 
 ```bash
 # Build the generator CLI
 pnpm --filter @fuyeor/reference-generator build
 
-# Compile Markdown/FON contents into static JSON artifacts
+# Compile all modules
 pnpm --filter @fuyeor/reference-generator start
+
+# Compile only the FFM module
+pnpm --filter @fuyeor/reference-generator start -- --m=ffm
 ```
+
+The module selector also accepts the long-compatible form `--module=ffm`. A module-specific build skips the global module indexes and does not rewrite generated artifacts belonging to other modules.
 
 ### Locale Generation
 

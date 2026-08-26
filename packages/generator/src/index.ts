@@ -198,7 +198,7 @@ export function buildContent(
   const locales = ['en', 'zh-hans'];
   const modules = resolveModules(contentRoot, moduleName);
 
-  buildModuleIndex(contentRoot, locales);
+  if (moduleName === undefined) buildModuleIndex(contentRoot, locales);
 
   console.log(`\n🚀 Scanning document source directory: ${contentRoot}`);
 
