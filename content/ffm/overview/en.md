@@ -14,6 +14,11 @@ Fuyeor Flavored Markdown (FFM, or FuyeorMark) is a Markdown specification that p
 - **If you are already familiar with Markdown**: read [Differences from Other Markdown Flavors](./tutorials/differences-from-commonmark) to understand how FFM differs from CommonMark and GFM.
 - **If you are a parser developer**: consult the [FFM Technical Specification](./specifications/overview) for AST node definitions and edge-case test cases.
 
+## Tools & Online Playground
+
+- **FFM Playground**: Visit [flavored.fuyeor.com/playground](https://flavored.fuyeor.com/playground) to write and preview Fuyeor Flavored Markdown online.
+- **FFM VS Code Extension**: Install **Fuyeor Flavored Markdown** from the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=Fuyeor.ffm), or search for `Fuyeor Flavored Markdown` or `Fuyeor.fer` in the VS Code Extensions view.
+
 ## Reference Implementation
 
 Below is the TypeScript-based reference implementation of FFM, used on sites such as Ф social, Ф reference, and Ф answers:

@@ -14,6 +14,11 @@ Fuyeor Flavored Markdown（简称 FFM 或 FuyeorMark）是一种在保留传统 
 - **如果你已熟悉 Markdown**：可阅读 [FFM 与其他 Markdown 的差异](./tutorials/differences-from-commonmark)，了解 FFM 和 CommonMark、GFM 的差异。
 - **如果你是解析器开发者**：可查阅 [FFM 技术规范](./specifications/overview)，获取 AST 节点定义与边界测试用例。
 
+## 工具与在线体验
+
+- **FFM 演练场**：访问 [flavored.fuyeor.com/playground](https://flavored.fuyeor.com/playground)，在线编写并预览 Fuyeor Flavored Markdown。
+- **FFM VS Code 插件**：在 [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=Fuyeor.ffm) 安装 **Fuyeor Flavored Markdown**；也可以在 VS Code 扩展市场搜索 `Fuyeor Flavored Markdown` 或 `Fuyeor.fer`。
+
 ## 参考实现
 
 以下是基于 TypeScript 的 FFM 参考实现，应用于 Ф social、Ф reference、Ф answers 等站点：
