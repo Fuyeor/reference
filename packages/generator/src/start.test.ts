@@ -57,17 +57,18 @@ describe('start CLI options', () => {
     expect(parseModuleName([])).toBeUndefined();
   });
 
-  it('parses the short and long module selectors', () => {
+  it('parses short and long module selectors', () => {
+    expect(parseModuleName(['-m=chemistry'])).toBe('chemistry');
     expect(parseModuleName(['--m=ffm'])).toBe('ffm');
     expect(parseModuleName(['--module=ffm'])).toBe('ffm');
-    expect(parseModuleName(['--', '--m=ffm'])).toBe('ffm');
+    expect(parseModuleName(['--', '-m=chemistry'])).toBe('chemistry');
   });
 
   it('rejects unsupported option forms', () => {
-    expect(() => parseModuleName(['--m', 'ffm'])).toThrow(
-      'Usage: start [--m={name}]',
+    expect(() => parseModuleName(['-m', 'chemistry'])).toThrow(
+      'Usage: start [-m={name}]',
     );
-    expect(() => parseModuleName(['--m='])).toThrow(
+    expect(() => parseModuleName(['-m='])).toThrow(
       'Module name cannot be empty.',
     );
   });

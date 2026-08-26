@@ -1,7 +1,7 @@
 // @fuyeor/reference-generator/src/start-options.ts
 import process from 'node:process';
 
-const MODULE_OPTION_PREFIXES = ['--m=', '--module='] as const;
+const MODULE_OPTION_PREFIXES = ['-m=', '--m=', '--module='] as const;
 
 /** Parses the optional module selector and rejects unsupported arguments. */
 export function parseModuleName(
@@ -17,7 +17,7 @@ export function parseModuleName(
   );
 
   if (normalizedArgs.length !== 1 || !prefix) {
-    throw new Error('Usage: start [--m={name}]');
+    throw new Error('Usage: start [-m={name}]');
   }
 
   const moduleName = moduleOption.slice(prefix.length).trim();
