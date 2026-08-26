@@ -28,5 +28,25 @@
     "module": "social",
     "title": "Ф social",
     "description": "Ф social help documentation, including usage instructions, feature descriptions, and frequently asked questions."
+  },
+  {
+    "module": "fer",
+    "title": "fer",
+    "description": ""
+  },
+  {
+    "module": "fon",
+    "title": "fon",
+    "description": ""
+  },
+  {
+    "module": "next-web",
+    "title": "next-web",
+    "description": ""
+  },
+  {
+    "module": "reference",
+    "title": "reference",
+    "description": ""
   }
 ]
