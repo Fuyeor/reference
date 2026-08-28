@@ -49,7 +49,7 @@ function walkMarkdownFiles(
       continue;
     }
 
-    if (!entry.isFile() || entry.name !== `${locale}.md`) {
+    if (!entry.isFile() || entry.name !== `${locale}.ffm`) {
       continue;
     }
 

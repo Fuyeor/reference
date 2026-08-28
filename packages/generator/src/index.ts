@@ -56,7 +56,7 @@ function compileNavigation(
       };
     }
 
-    const mdFilePath = path.join(bookDir, nodePath, `${locale}.md`);
+    const mdFilePath = path.join(bookDir, nodePath, `${locale}.ffm`);
     let title = node.slug;
 
     if (fs.existsSync(mdFilePath)) {
@@ -80,14 +80,14 @@ function scanAndBuildDocMeta(directory: string, contentRoot: string): void {
     .readdirSync(directory, { withFileTypes: true })
     .sort((left, right) => left.name.localeCompare(right.name));
   const mdFiles = entries
-    .filter((entry) => entry.isFile() && entry.name.endsWith('.md'))
+    .filter((entry) => entry.isFile() && entry.name.endsWith('.ffm'))
     .map((entry) => entry.name);
 
   if (mdFiles.length > 0) {
     const docMeta: Record<string, unknown> = {};
 
     for (const mdFile of mdFiles) {
-      const locale = mdFile.replace(/\.md$/, '');
+      const locale = mdFile.replace(/\.ffm$/, '');
       const fullMdPath = path.join(directory, mdFile);
       const gitMeta = getGitMetadata(fullMdPath);
       const extractedTitle = extractH1Title(fullMdPath);
@@ -151,7 +151,11 @@ export function buildModuleIndex(
   }> = [];
 
   for (const moduleName of modules) {
-    const structureSourcePath = path.join(contentRoot, moduleName, 'structure.json');
+    const structureSourcePath = path.join(
+      contentRoot,
+      moduleName,
+      'structure.json',
+    );
 
     if (!fs.existsSync(structureSourcePath)) {
       console.warn(
@@ -226,7 +230,11 @@ export function buildContent(
     for (const locale of locales) {
       const localizedStructure = {
         title: resolveLocalizedValue(rawStructure.title, locale, book),
-        description: resolveLocalizedValue(rawStructure.description, locale, ''),
+        description: resolveLocalizedValue(
+          rawStructure.description,
+          locale,
+          '',
+        ),
         navigation: compileNavigation(
           rawStructure.navigation || [],
           bookDir,

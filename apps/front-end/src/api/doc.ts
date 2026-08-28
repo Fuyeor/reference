@@ -1,10 +1,6 @@
 // @/api/doc.ts
 import apiClient from '@/api';
-import type {
-  DocMeta,
-  ModuleIndexItem,
-  ModuleStructure,
-} from '@/types/doc';
+import type { DocMeta, ModuleIndexItem, ModuleStructure } from '@/types/doc';
 import { assertMarkdownContent } from '@/utils/markdown-response';
 
 /** Fetches the localized module index for the home page. */
@@ -23,7 +19,7 @@ export async function fetchContent(
   locale: string,
 ): Promise<string> {
   const content = await apiClient.get<string>(
-    `/content/${book}/${navigation}/${locale}.md`,
+    `/content/${book}/${navigation}/${locale}.ffm`,
   );
   return assertMarkdownContent(content);
 }

@@ -3,11 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
 import { afterEach, describe, expect, it } from 'vitest';
-import {
-  buildContent,
-  buildModuleIndex,
-  resolveModules,
-} from './index';
+import { buildContent, buildModuleIndex, resolveModules } from './index';
 import { parseModuleName } from './start-options';
 
 const temporaryDirectories: string[] = [];
@@ -38,7 +34,7 @@ function createContentFixture(): string {
       }),
     );
     fs.writeFileSync(
-      path.join(moduleRoot, 'overview', 'en.md'),
+      path.join(moduleRoot, 'overview', 'en.ffm'),
       `# ${moduleName} overview`,
     );
   }

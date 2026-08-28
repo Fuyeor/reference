@@ -39,13 +39,13 @@ export default defineConfig(() => {
                 res.setHeader('Access-Control-Allow-Origin', '*');
 
                 // 对齐 FFM 规范的本地 Mime-Types
-                if (filePath.endsWith('.fon') || filePath.endsWith('.json')) {
+                if (filePath.endsWith('.json')) {
                   res.setHeader(
                     'Content-Type',
                     'application/json; charset=utf-8',
                   );
-                } else if (filePath.endsWith('.md')) {
-                  res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
+                } else if (filePath.endsWith('.ffm')) {
+                  res.setHeader('Content-Type', 'text/ffm; charset=utf-8');
                 } else {
                   res.setHeader('Content-Type', 'application/octet-stream');
                 }

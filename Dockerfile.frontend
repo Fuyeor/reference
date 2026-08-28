@@ -63,7 +63,7 @@ RUN echo 'server { \
     server_name localhost; \
     root /usr/share/nginx/html; \
     include mime.types; \
-    types { text/markdown md; } \
+    types { text/ffm ffm; } \
     index index.html; \
     location ^~ /v1/content/ { try_files $uri =404; } \
     location / { try_files $uri $uri/ /index.html; } \

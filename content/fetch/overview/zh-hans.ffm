@@ -1,9 +1,6 @@
-<!-- content/fetch/overview/zh-hans.md -->
-
 # 什么是 Fetch？
 
 [Fetch](https://fetch.fuyeor.com) 是搜索模式协议（Search Patterns Protocol，SPP）的参考实现。SPP 是一种基于模式匹配、架构无关的实验性索引标准；本模块当前文档聚焦 FON 文件的层级结构和站点接入方式，不扩展到传统搜索引擎的提交、抓取或排名功能。
-
 
 ## 文档结构
 

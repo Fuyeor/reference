@@ -29,27 +29,33 @@ function createContentFixture(): string {
     recursive: true,
   });
   fs.writeFileSync(
-    path.join(contentRoot, 'ffm', 'overview', 'en.md'),
+    path.join(contentRoot, 'ffm', 'overview', 'en.ffm'),
     '# Overview',
   );
   fs.writeFileSync(
-    path.join(contentRoot, 'ffm', 'tutorials', 'getting-started', 'en.md'),
+    path.join(contentRoot, 'ffm', 'tutorials', 'getting-started', 'en.ffm'),
     '# Getting started',
   );
   fs.writeFileSync(
-    path.join(contentRoot, 'chemistry', 'apis', 'en.md'),
+    path.join(contentRoot, 'chemistry', 'apis', 'en.ffm'),
     '# APIs',
   );
   fs.writeFileSync(
-    path.join(contentRoot, 'ffm', 'overview', 'zh-hans.md'),
+    path.join(contentRoot, 'ffm', 'overview', 'zh-hans.ffm'),
     '# 概览',
   );
   fs.writeFileSync(
-    path.join(contentRoot, 'ffm', 'tutorials', 'getting-started', 'zh-hans.md'),
+    path.join(
+      contentRoot,
+      'ffm',
+      'tutorials',
+      'getting-started',
+      'zh-hans.ffm',
+    ),
     '# 入门',
   );
   fs.writeFileSync(
-    path.join(contentRoot, 'chemistry', 'apis', 'zh-hans.md'),
+    path.join(contentRoot, 'chemistry', 'apis', 'zh-hans.ffm'),
     '# APIs',
   );
 

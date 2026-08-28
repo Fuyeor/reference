@@ -31,13 +31,13 @@ const handleCopyMarkdown = async () => {
 
 // Open the raw un-compiled Markdown file directly in a new tab
 const handleOpenRawMarkdown = () => {
-  const rawUrl = `/v1/content/${props.module}/${props.navigation}/${props.locale}.md`;
+  const rawUrl = `/v1/content/${props.module}/${props.navigation}/${props.locale}.ffm`;
   window.open(rawUrl, '_blank');
 };
 
 // Navigate directly to GitHub's web editor for instant community contribution
 const handleEditOnGitHub = () => {
-  const gitHubEditUrl = `https://github.com/Fuyeor/reference/blob/main/content/${props.module}/${props.navigation}/${props.contentLocale}.md`;
+  const gitHubEditUrl = `https://github.com/Fuyeor/reference/blob/main/content/${props.module}/${props.navigation}/${props.contentLocale}.ffm?plain=1`;
   window.open(gitHubEditUrl, '_blank');
 };
 
