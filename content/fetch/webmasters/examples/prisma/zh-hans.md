@@ -1,0 +1,140 @@
+# Prisma 示例：生成 FON sitemap
+
+本示例演示如何从 Prisma 查询 `Thought` 记录，并将查询结果序列化为 SPP 站点地图层的 FON 文本。Prisma 和 TypeScript 仅用于演示数据源接入方式；SPP 不要求使用特定的 ORM、后端语言或数据库。
+
+## 示例目标
+
+示例使用以下 URL 模式：
+
+```fon
+[
+  {
+    pattern = `/users/{user-id}/thoughts/{id}`
+    params = struct {
+      user-id: string,
+      id: int
+    }
+    datas = ./sitemaps/thoughts.fon
+  }
+]
+```
+
+生成的 sitemap 每一项包含与模式对应的 `params` 和可选的 `updated-at`。协议字段建议使用 **kebab-case**，因此示例将 Prisma 模型中的 `user_id` 映射为 FON 中的 `user-id`。
+
+## 1. 安装依赖
+
+在已有的 Prisma TypeScript 项目中安装 Prisma Client 和 FON parser。项目也可以使用其他包管理器完成同等安装。
+
+```sh
+pnpm add @prisma/client @fuyeor/fon-parser
+```
+
+如果项目尚未初始化 Prisma，请按照项目自身的数据库配置完成 Prisma schema 和 Client 生成。本示例只关注查询结果如何转换为 sitemap，不改变项目现有的数据库配置。
+
+## 2. 准备 Prisma 模型
+
+本示例使用以下模型：
+
+```prisma
+model Thought {
+  id         Int      @id @default(autoincrement())
+  user_id    String   @db.Uuid
+
+  content    String?  @db.Text
+  created_at DateTime @default(now()) @db.Timestamp(0)
+  updated_at DateTime @default(now()) @db.Timestamp(0)
+}
+```
+
+`id` 和 `user_id` 用于填充 URL 模式的动态参数，`updated_at` 用于填充 sitemap 项的更新时间。`content` 可以由项目的内容层生成流程单独处理；本示例不把正文内容重复写入 sitemap 项。
+
+## 3. 查询并映射字段
+
+查询时只选择生成 sitemap 所需的字段，并在映射阶段把数据库命名转换为协议命名。`updated-at` 是有类型的时间原子，应使用 `rawAtom()` 保留其 FON 类型；不要把它作为普通 JavaScript 字符串交给 serializer。
+
+```ts
+// examples/generate-thought-sitemap.ts
+import { PrismaClient } from '@prisma/client';
+import { rawAtom, stringify } from '@fuyeor/fon-parser';
+
+const prisma = new PrismaClient();
+
+type ThoughtSitemapItem = {
+  params: {
+    'user-id': string;
+    id: number;
+  };
+  'updated-at': ReturnType<typeof rawAtom>;
+};
+
+/** Queries Thought records and returns the SPP sitemap layer as FON. */
+async function createThoughtSitemap(): Promise<string> {
+  const thoughts = await prisma.thought.findMany({
+    select: {
+      id: true,
+      user_id: true,
+      updated_at: true,
+    },
+    orderBy: {
+      id: 'asc',
+    },
+  });
+
+  const items: ThoughtSitemapItem[] = thoughts.map((thought) => ({
+    params: {
+      'user-id': thought.user_id,
+      id: thought.id,
+    },
+    'updated-at': rawAtom(thought.updated_at.toISOString()),
+  }));
+
+  return stringify(items, { trailingNewline: true });
+}
+
+try {
+  process.stdout.write(await createThoughtSitemap());
+} finally {
+  await prisma.$disconnect();
+}
+```
+
+查询结果中的 `user_id` 会写入 FON 的 `user-id`，`updated_at` 会先转换为 ISO 8601 文本，再由 `rawAtom()` 作为时间原子写入。查询排序使输出顺序稳定，便于比较生成结果和检查变更。
+
+## 4. 生成 sitemap 文件
+
+将上面的函数接入项目已有的 TypeScript 构建任务后，把标准输出写入 `datas` 指向的文件。例如：
+
+```sh
+node dist/examples/generate-thought-sitemap.js > public/sitemaps/thoughts.fon
+```
+
+输出示例如下：
+
+```fon
+[
+  {
+    params = {
+      user-id = `00000000-0000-0000-0000-000000000001`
+      id = 42
+    }
+    updated-at = 2026-08-28T10:00:00.000Z
+  }
+]
+```
+
+生成的文件应放在与索引层 `datas` 路径对应的位置。请确认输出中只包含希望 Fetch 请求和收录的资源；不希望收录的资源不要生成对应的 sitemap 项。
+
+## 5. 发布前检查
+
+发布前请检查以下内容：
+
+| 检查项 | 要求 |
+| :--- | :--- |
+| 模式变量 | `pattern` 中的变量与 `params` 字段一一对应。 |
+| 字段命名 | 协议字段优先使用 kebab-case；数据库字段可保持项目现有命名。 |
+| 参数类型 | `user-id` 为字符串，`id` 为整数，且值来自查询结果。 |
+| 时间类型 | `updated-at` 使用 `rawAtom()` 保留为时间原子。 |
+| 资源范围 | sitemap 中只列出希望 Fetch 请求和收录的资源。 |
+| 输出路径 | 生成文件的位置与索引层的 `datas` 路径一致。 |
+
+Fetch 不读取 `robots.txt`。如果不希望某条记录对应的资源被 Fetch 请求或收录，应在查询映射阶段排除它，或在输出 sitemap 前将该项移除。

@@ -1,18 +1,23 @@
 [
   {
-    "module": "fpm",
-    "title": "FPM Package Publishing",
-    "description": "Getting started, publishing workflows, and CLI reference for the FPM package registry."
-  },
-  {
     "module": "chemistry",
     "title": "Chemistry API",
     "description": "An API for rendering SMILES and Reaction SMILES as SVG chemical structures."
   },
   {
+    "module": "fetch",
+    "title": "Fetch Search",
+    "description": "Search Patterns Protocol reference, site integration steps, and sitemap generation examples."
+  },
+  {
     "module": "ffm",
     "title": "FFM Specification",
     "description": "Fuyeor Flavored Markdown (FFM) typography specifications and technical references."
+  },
+  {
+    "module": "fpm",
+    "title": "FPM Package Publishing",
+    "description": "Getting started, how-to guides, and CLI reference for the FPM package registry and publishing tool."
   },
   {
     "module": "platform",

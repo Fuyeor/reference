@@ -1,0 +1,43 @@
+{
+  "title": {
+    "zh-hans": "Fetch 搜索",
+    "en": "Fetch Search"
+  },
+  "description": {
+    "zh-hans": "搜索模式协议规范、站点接入步骤和生成站点地图的示例。",
+    "en": "Search Patterns Protocol reference, site integration steps, and sitemap generation examples."
+  },
+  "navigation": [
+    { "slug": "overview" },
+    {
+      "slug": "webmasters",
+      "title": {
+        "zh-hans": "站点接入",
+        "en": "Site Integration"
+      },
+      "navigation": [
+        { "slug": "overview" },
+        {
+          "slug": "examples",
+          "title": {
+            "zh-hans": "接入示例",
+            "en": "Integration examples"
+          },
+          "navigation": [
+            {
+              "slug": "prisma"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "search-patterns-protocol",
+      "title": {
+        "zh-hans": "搜索模式协议",
+        "en": "Search Patterns Protocol"
+      },
+      "navigation": [{ "slug": "overview" }]
+    }
+  ]
+}

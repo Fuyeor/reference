@@ -18,10 +18,10 @@ pnpm --filter @fuyeor/reference-generator build
 pnpm --filter @fuyeor/reference-generator start
 
 # Compile only the FFM module
-pnpm --filter @fuyeor/reference-generator start -- --m=ffm
+pnpm --filter @fuyeor/reference-generator start --module=ffm
 ```
 
-The module selector also accepts the long-compatible form `--module=ffm`. A module-specific build skips the global module indexes and does not rewrite generated artifacts belonging to other modules.
+A module-specific build skips the global module indexes and does not rewrite generated artifacts belonging to other modules.
 
 ### Locale Generation
 

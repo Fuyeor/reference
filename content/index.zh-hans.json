@@ -1,18 +1,23 @@
 [
   {
-    "module": "fpm",
-    "title": "FPM 包发布工具",
-    "description": "FPM 包注册表的快速上手、发布流程和 CLI 参考。"
-  },
-  {
     "module": "chemistry",
     "title": "Chemistry API",
     "description": "用于将 SMILES 和 Reaction SMILES 渲染为 SVG 化学结构图的 API。"
   },
   {
+    "module": "fetch",
+    "title": "Fetch 搜索",
+    "description": "搜索模式协议规范、站点接入步骤和生成站点地图的示例。"
+  },
+  {
     "module": "ffm",
     "title": "FFM 规范",
     "description": "Fuyeor Flavored Markdown (FFM) 语法排版规范与技术参考指南。"
+  },
+  {
+    "module": "fpm",
+    "title": "FPM 包发布工具",
+    "description": "FPM 包注册表与命令行发布工具的入门、操作指南和 CLI 参考。"
   },
   {
     "module": "platform",
