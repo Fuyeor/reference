@@ -1,0 +1,11 @@
+{
+  "title": {
+    "zh-hans": "Next Web 规范"
+  },
+  "description": {
+    "zh-hans": "基于 FON 文档树与 Fer Interpreter 的 Web 方向概念规范，包含 Webroamer、FRL、请求头与兼容边界。"
+  },
+  "navigation": [
+    { "slug": "overview" }
+  ]
+}
