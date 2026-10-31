@@ -1,0 +1,14 @@
+{
+  "title": {
+    "zh-hans": "Reference 网站编辑指南"
+  },
+  "description": {
+    "zh-hans": "Reference 文档网站的内容目录、structure.json、Markdown 写作、校验与 PR 发布指南。"
+  },
+  "navigation": [
+    { "slug": "overview" },
+    { "slug": "structure-json", "title": { "zh-hans": "structure.json 编写方式" } },
+    { "slug": "markdown", "title": { "zh-hans": "Markdown 编辑规范" } },
+    { "slug": "workflow", "title": { "zh-hans": "编辑与 PR 工作流" } }
+  ]
+}

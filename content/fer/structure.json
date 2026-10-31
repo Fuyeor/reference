@@ -1,0 +1,22 @@
+{
+  "title": {
+    "zh-hans": "Fer 语言规范"
+  },
+  "description": {
+    "zh-hans": "Fer 意图编程语言的语法、表达式、类型、模块、实现后端与工具链规范。"
+  },
+  "navigation": [
+    { "slug": "overview" },
+    { "slug": "syntax" },
+    { "slug": "expressions" },
+    { "slug": "types" },
+    { "slug": "functions" },
+    { "slug": "modules" },
+    { "slug": "attributes" },
+    { "slug": "strings" },
+    { "slug": "formatting" },
+    { "slug": "migration" },
+    { "slug": "backends" },
+    { "slug": "memory-and-performance" }
+  ]
+}

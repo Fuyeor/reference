@@ -1,0 +1,15 @@
+{
+  "title": {
+    "zh-hans": "FON 对象表示规范"
+  },
+  "description": {
+    "zh-hans": "Fer Object Notation 的对象、数组、Scheme、序列化与资源定位规范。"
+  },
+  "navigation": [
+    { "slug": "overview" },
+    { "slug": "syntax" },
+    { "slug": "schemes", "title": { "zh-hans": "Scheme" } },
+    { "slug": "serialization", "title": { "zh-hans": "序列化与传输" } },
+    { "slug": "frl", "title": { "zh-hans": "Fer Resource Locator" } }
+  ]
+}

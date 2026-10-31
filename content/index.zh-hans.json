@@ -33,5 +33,25 @@
     "module": "social",
     "title": "Ф 社交",
     "description": "Ф 社交媒体使用帮助文档，包含 Ф 社交应用的使用说明、功能介绍、常见问题解答等内容。"
+  },
+  {
+    "module": "fer",
+    "title": "Fer 语言规范",
+    "description": "Fer 意图编程语言的语法、表达式、类型、模块、实现后端与工具链规范。"
+  },
+  {
+    "module": "fon",
+    "title": "FON 对象表示规范",
+    "description": "Fer Object Notation 的对象、数组、Scheme、序列化与资源定位规范。"
+  },
+  {
+    "module": "next-web",
+    "title": "Next Web 规范",
+    "description": "基于 FON 文档树与 Fer Interpreter 的 Web 方向概念规范，包含 Webroamer、FRL、请求头与兼容边界。"
+  },
+  {
+    "module": "reference",
+    "title": "Reference 网站编辑指南",
+    "description": "Reference 文档网站的内容目录、structure.json、Markdown 写作、校验与 PR 发布指南。"
   }
 ]
