@@ -2,18 +2,15 @@
 
 ## Documentation
 
-All documentation content is managed within the `/content/` directory.
+All documentation content is managed within the `/content/` directory. Documents under `/content/` must use the `.ffm` extension and follow [the FFM syntax](/content/ffm/overview/en.ffm).
 
 ## Development
 
 ### Documentation Generation
 
-Run `build` to generate the documentation builder, then run the start command to produce localized structure and document metadata JSON artifacts:
+The generator runs directly from TypeScript source — no separate build step is required.
 
 ```bash
-# Build the generator CLI
-pnpm --filter @fuyeor/reference-generator build
-
 # Compile all modules
 pnpm --filter @fuyeor/reference-generator start
 
