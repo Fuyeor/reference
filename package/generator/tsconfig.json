@@ -1,0 +1,11 @@
+{
+  "extends": "@fuyeor/tsconfig/browser.json",
+  "include": ["src/**/*", "../../app/front-end/src/document/type.ts"],
+  "compilerOptions": {
+    "paths": {
+      "#/*": ["./src/*"]
+    },
+    "types": ["node"],
+    "allowImportingTsExtensions": true
+  }
+}

@@ -7,9 +7,9 @@ on:
       - main
     paths:
       # Trigger deployment when frontend, content, generator, or build configuration changes
-      - 'apps/front-end/**'
+      - 'app/front-end/**'
       - 'content/**'
-      - 'packages/generator/**'
+      - 'package/generator/**'
       - 'Dockerfile.frontend'
 
 env:

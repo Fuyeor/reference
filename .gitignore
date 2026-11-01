@@ -2,10 +2,9 @@
 # Exclusive to reference.fuyeor.com
 # ========================
 
+content/index.*.json
 content/**/index.json
 content/**/structure.*.json
-# temporary symbolic link prepared for locale-cli
-apps/reference
 
 # ========================
 # Environment variables
@@ -36,7 +35,7 @@ apps/reference
 **/dist
 **/build
 **/generated
-**/public/assets/locale
+**/public/static/locale
 
 # ========================
 # Temporiary files

@@ -10,21 +10,21 @@
   "navigation": [
     { "slug": "about" },
     {
-      "slug": "policies",
+      "slug": "policy",
       "title": {
         "zh-hans": "平台政策",
         "en": "Platform Policies"
       },
       "navigation": [
         { "slug": "accessibility" },
-        { "slug": "cookies" },
+        { "slug": "cookie" },
         { "slug": "terms-of-service" },
         { "slug": "privacy-policy" },
         { "slug": "no-phone-policy" }
       ]
     },
     {
-      "slug": "guidelines",
+      "slug": "guideline",
       "title": {
         "zh-hans": "创作者守则",
         "en": "Creator Guidelines"

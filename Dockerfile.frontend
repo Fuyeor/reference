@@ -7,41 +7,34 @@ ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 
-WORKDIR /app
+WORKDIR /workspace
 
 # 1. Copy workspace configurations to root
-COPY reference/package.json reference/pnpm-lock.yaml reference/pnpm-workspace.yaml reference/.npmrc ./reference/
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 
 # 2. Copy individual package.json files for aggressive dependency caching.
 # This prevents cache invalidation and guarantees all dependencies (like esbuild) are fully installed.
-COPY reference/apps/front-end/package.json ./reference/apps/front-end/
-COPY reference/packages/generator/package.json ./reference/packages/generator/
+COPY app/front-end/package.json ./app/front-end/
+COPY package/generator/package.json ./package/generator/
 
 # 3. Cache and install dependencies across the workspace using pnpm store
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
-    cd reference && pnpm install --frozen-lockfile
+    pnpm install --frozen-lockfile
 
-# 4. Copy the complete source code of the reference repository.
-COPY reference/ ./reference/
+# copy source code
+COPY . .
 
 # 5. Generate localized bundles
-RUN cd reference && \
-    pnpm locale make reference --prod
-
-# 6. Build the generator CLI
-RUN cd reference && \
-    pnpm --filter @fuyeor/reference-generator build
+RUN pnpm locale make reference --prod
 
 # 8. Build the highly optimized reference-front-end Vue 3.5 CSR application
-RUN cd reference && pnpm --filter @fuyeor/reference-front-end build
+RUN pnpm --filter @fuyeor/reference-front-end build
 
 # 9. Compile Markdown/FON contents into static JSON artifacts
-RUN cd reference && \
-    pnpm --filter @fuyeor/reference-generator start
+RUN pnpm --filter @fuyeor/reference-generator start
 
 # 10. Generate multilingual sitemaps into dist/sitemaps
-RUN cd reference && \
-    pnpm --filter @fuyeor/reference-generator sitemap
+RUN pnpm --filter @fuyeor/reference-generator sitemap
 
 # ==========================================
 # Stage 2: Deploy and serve via Nginx
@@ -52,10 +45,10 @@ FROM nginx:alpine AS runner
 RUN rm -rf /usr/share/nginx/html/*
 
 # 1. Copy the compiled Vue 3.5 SPA assets to the web root
-COPY --from=builder /app/reference/apps/front-end/dist /usr/share/nginx/html
+COPY --from=builder /workspace/app/front-end/dist /usr/share/nginx/html
 
 # 2. Copy the compiled content directly to /v1/content on disk.
-COPY --from=builder /app/reference/content /usr/share/nginx/html/v1/content
+COPY --from=builder /workspace/app/content /usr/share/nginx/html/v1/content
 
 # 3. Inject custom Nginx config, ensuring SPA client routing compatibility and mapping .fon as application/json
 RUN echo 'server { \

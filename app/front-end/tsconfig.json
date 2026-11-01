@@ -1,0 +1,10 @@
+{
+  "extends": "@fuyeor/tsconfig/browser.json",
+  "include": ["vite.config.ts", "src/**/*.ts", "src/**/*.vue"],
+  "compilerOptions": {
+    "paths": {
+      "@app/*": ["./src/@app/*"],
+      "@/*": ["./src/*"]
+    }
+  }
+}

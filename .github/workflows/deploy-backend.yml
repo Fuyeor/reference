@@ -7,7 +7,7 @@ on:
       - main
     paths:
       # Only trigger workflow when backend files are modified
-      - "apps/back-end/**"
+      - 'app/back-end/**'
 
 env:
   REGISTRY: ghcr.io
