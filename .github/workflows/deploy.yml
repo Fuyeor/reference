@@ -7,8 +7,9 @@ on:
       - main
     paths:
       # Trigger deployment when frontend, content, generator, or build configuration changes
-      - 'app/front-end/**'
+      - '.github/workflows/**'
       - 'content/**'
+      - 'app/front-end/**'
       - 'package/generator/**'
       - 'Dockerfile.frontend'
 
@@ -29,7 +30,6 @@ jobs:
       - name: Checkout Reference Repository
         uses: actions/checkout@v4
         with:
-          path: reference
           fetch-depth: 0 # Fetches 100% commit history
           filter: blob:none # Excludes all historical file content blobs
 
@@ -55,6 +55,6 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: . # Build context containing the reference repository and locale-cli binary
-          file: ./reference/Dockerfile.frontend
+          file: ./Dockerfile.frontend
           push: true # Enables automatic pushing to GHCR
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest

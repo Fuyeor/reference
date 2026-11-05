@@ -47,7 +47,7 @@ RUN rm -rf /usr/share/nginx/html/*
 COPY --from=builder /workspace/app/front-end/dist /usr/share/nginx/html
 
 # 2. Copy the compiled content directly to /v1/content on disk.
-COPY --from=builder /workspace/app/content /usr/share/nginx/html/v1/content
+COPY --from=builder /workspace/content /usr/share/nginx/html/v1/content
 
 # 3. Inject custom Nginx config, ensuring SPA client routing compatibility and mapping .fon as application/json
 RUN echo 'server { \
