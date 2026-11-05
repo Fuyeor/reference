@@ -10,7 +10,7 @@
   "navigation": [
     { "slug": "overview" },
     {
-      "slug": "tutorials",
+      "slug": "tutorial",
       "title": {
         "zh-hans": "基础指南",
         "en": "Tutorials"
@@ -26,11 +26,34 @@
           "navigation": [
             { "slug": "basic" },
             { "slug": "advanced" },
-            { "slug": "extensions" }
+            { "slug": "extension" }
           ]
         },
-        { "slug": "differences-from-commonmark" },
-        { "slug": "prompts" }
+        { "slug": "difference-from-commonmark" },
+        { "slug": "prompt" }
+      ]
+    },
+    {
+      "slug": "specification",
+      "title": {
+        "zh-hans": "技术规范",
+        "en": "Specification"
+      },
+      "navigation": [
+        { "slug": "overview" },
+        { "slug": "principle" },
+        {
+          "slug": "syntax",
+          "title": {
+            "zh-hans": "语法规范",
+            "en": "Syntax Specifications"
+          },
+          "navigation": [
+            { "slug": "inline" },
+            { "slug": "block" },
+            { "slug": "layout" }
+          ]
+        }
       ]
     }
   ]

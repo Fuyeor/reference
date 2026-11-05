@@ -6,10 +6,10 @@ FPM 是一个包注册表和命令行发布工具，面向源代码包作者。�
 
 | 你想要…… | 从这里开始 |
 | :--- | :--- |
-| 安装 FPM 并发布第一个包 | [快速上手](../tutorials/getting-started) |
-| 从指定目录发布已有包 | [发布包](../how-to/publish) |
-| 查看全部命令和选项 | [CLI 参考](../reference/cli) |
-| 了解包和上传流程 | [CLI 参考：publish](../reference/cli#publish) |
+| 安装 FPM 并发布第一个包 | [快速上手](./tutorial/getting-started) |
+| 从指定目录发布已有包 | [发布包](./how-to/publish) |
+| 查看全部命令和选项 | [CLI 参考](./reference/cli) |
+| 了解包和上传流程 | [CLI 参考：publish](./reference/cli#publish) |
 
 FPM 设计为全局安装。安装完成后，直接使用 `fpm` 命令即可，不需要再通过 Node.js 显式执行生成的 JavaScript 文件。
 

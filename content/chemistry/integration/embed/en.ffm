@@ -19,10 +19,10 @@ You can also use an inline annotation (`` #[smiles=`molecule`] ``) to insert a s
 Caffeine (formula: #[smiles = `CN1C=NC2=C1C(=O)N(C(=O)N2C)C`]) keeps you awake by blocking adenosine receptors.
 ```
 
-**🌟 NOTE:**
+**NOTE:**
 
 - The SMILES string must be wrapped in backticks (`` ` ``), consistent with the code block syntax.
-- You can test the rendering effect in the [FFM Playground](https://flavored.fuyeor.com/).
+- You can test the rendering effect in the [FFM Playground](https://flavored.fuyeor.com/document).
 
 ## Common Markdown
 

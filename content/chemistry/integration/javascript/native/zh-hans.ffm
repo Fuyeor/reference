@@ -72,7 +72,7 @@ molecules.forEach(({ id, smiles }) => {
 | `404` | 提供的化合物名称在 PubChem 中未找到。 |
 | `502` | PubChem 上游服务不可用。 |
 
-详细的错误响应体请参阅 [API 参考](/chemistry/apis/depict)。
+详细的错误响应体请参阅 [API 参考](/chemistry/api/depict)。
 
 ## 自定义颜色
 
@@ -95,4 +95,4 @@ fetch(url)
   });
 ```
 
-受支持的颜色键和值格式的完整参考，请参见 [API 参考](/chemistry/apis/depict)。
+受支持的颜色键和值格式的完整参考，请参见 [API 参考](/chemistry/api/depict)。

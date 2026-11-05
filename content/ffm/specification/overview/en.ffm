@@ -1,0 +1,109 @@
+# Overview
+
+## Scope
+
+This specification defines the syntax set, parsing rules, rendering contract, and conformance requirements for Fuyeor Flavored Markdown (FFM). FFM is an independent language in the Markdown family; this specification does not use another Markdown specification as a base, nor does it indirectly define syntax by saying that it is consistent with another specification.
+
+This specification is intended for two kinds of readers: developers implementing FFM parsers or renderers, and users who need to confirm whether a given construct conforms to FFM syntax. Tutorial content is outside the scope of this specification.
+
+## Normative Keywords
+
+The keywords in this document have the following meanings:
+
+- **MUST**: An absolute requirement. An implementation that does not conform to this is considered non-conformant to this specification.
+- **MUST NOT**: An absolute prohibition.
+- **SHOULD**: To be followed when there is no reasonable reason not to. When deviating, the reason SHOULD be stated.
+- **SHOULD NOT**: To be avoided when there is no reasonable reason not to.
+- **MAY**: An implementation may decide for itself whether to support something. For example, a parser MAY implement an experimental syntax.
+
+The meanings of these keywords refer to [RFC 2119](https://www.rfc-editor.org/info/rfc2119/).
+
+## Terminology
+
+- **Document**: A text input that conforms to FFM syntax.
+- **Inline**: A syntax unit that appears inside a block-level unit and does not occupy its own line.
+- **Block-level**: A syntax unit that occupies a complete line or consecutive lines and may contain other block-level units or inline content.
+- **Parser**: An implementation that converts a document into an intermediate representation that can be rendered.
+- **Renderer**: An implementation that presents parsing results as observable output. The parser and renderer may be the same implementation or may be separate.
+- **Fallback behavior**: The output produced in the prescribed manner when a renderer does not support a syntax unit.
+- **Runtime**: The platform or environment that hosts FFM rendering, such as a browser, native application, or terminal.
+
+Internal references in this specification are based on section names. When a section name changes, references should be updated accordingly.
+
+## Behavior Classification
+
+Constructs in this specification are divided into three categories:
+
+- **Defined behavior**: The specification explicitly defines the semantics and rendering contract.
+- **Undefined behavior (UB)**: Considered by the specification, but specific semantics are deliberately not specified. Implementations are free to decide.
+- **Unlisted constructs**: Not mentioned by the specification, and handled according to the closed declaration in "Semantic Boundaries and Extensions".
+
+Defined behavior is the main body of the specification. UB is used only for edge cases that are explicitly mentioned by the specification but for which mandatory regulation has no practical benefit. The specification should not overuse UB; behavior that can be clearly defined should be clearly defined.
+
+## Characters and Lines
+
+A document is a sequence of characters; a character means a Unicode code point. This specification does not specify document encoding, but considers lines to be composed of characters rather than bytes.
+
+A **line** is a sequence of zero or more characters other than line feed (U+000A) or carriage return (U+000D), followed by a line ending or the end of the document.
+
+A **line ending** is a line feed (U+000A), a carriage return (U+000D) not followed by a line feed, or a carriage return followed by a line feed.
+
+A line containing no characters, or containing only spaces (U+0020) or tabs (U+0009), is called a **blank line**.
+
+This specification uses the following character classes:
+
+- **Unicode whitespace character**: A character in the Unicode General Category Zs, or a tab (U+0009), line feed (U+000A), form feed (U+000C), or carriage return (U+000D).
+- **Unicode whitespace**: A sequence of one or more Unicode whitespace characters.
+- **Tab**: U+0009.
+- **Space**: U+0020.
+- **ASCII punctuation**: `!`, `"`, `#`, `$`, `%`, `&`, `'`, `(`, `)`, `*`, `+`, `,`, `-`, `.`, `/` (U+0021–2F), `:`, `;`, `<`, `=`, `>`, `?`, `@` (U+003A–0040), `[`, `\`, `]`, `^`, `_`, `` ` `` (U+005B–0060), `{`, `|`, `}`, `~` (U+007B–007E).
+- **Unicode punctuation**: A character in the Unicode General Category P (Punctuation) or S (Symbol).
+
+## Semantic Boundaries and Extensions
+
+The syntax listed in this specification constitutes the complete syntax set defined by FFM. Unlisted constructs do not have FFM-defined semantics.
+
+Implementations MAY define extension semantics outside FFM, for example, a documentation site interpreting `@/` as an absolute path, or a social platform interpreting `#tag` and `@user` as topics and mentions. Such extension semantics are not part of the FFM specification and MUST NOT conflict with syntax already defined by FFM. When the same construct has both FFM semantics and extension semantics, FFM semantics take precedence.
+
+Experimental syntax in this specification is part of FFM but has lower maturity; see the "Maturity" section.
+
+## Integration Points
+
+FFM syntax provides integration points for external renderers. An integration point is itself an FFM syntax unit, such as a fenced code block or annotation syntax; the `integration` section only defines what a renderer MUST do when a language identifier or MEL key points to an external renderer, and how to fall back when unsupported.
+
+Integration points do not add new FFM syntax. Whether an external renderer is available is determined by the runtime. This specification does not guarantee that all runtimes support all integration points; it only requires that unsupported cases be output according to the specified fallback behavior.
+
+Units that add syntax (for example, math formula delimiters) are defined in the `syntax` section, not in the `integration` section.
+
+### Proposal Stages
+
+FFM syntax evolution proceeds through the following stages. Stage 0–3 proposals do not enter this specification; only syntax that reaches Stage 4 is included as formal syntax.
+
+- **Stage 0 (Thought)**: Any idea. It is not required to be submitted to the repository, but a traceable record is required (issue, discussion thread, exported chat log, etc.). Stage 0 content is not used as a basis for the specification.
+- **Stage 1 (Proposal)**: Submit a PR to the FFM proposal repository, including a problem description, a preliminary approach, and potential challenges. The Stage 1 PR description SHOULD reference the Stage 0 record.
+- **Stage 2 (Draft)**: Maintainers select the preferred direction and produce initial specification text. The specification text includes syntax definition, rendering contract, and edge cases, and MAY contain examples to be added (TODO).
+- **Stage 3 (Candidate)**: The specification text is complete and has been signed off by designated reviewers. A complete example set is produced; the example set SHOULD cover normal behavior and edge behavior. Syntax is frozen at this stage; no further functional changes are accepted, and only ambiguities or errors are corrected based on implementation feedback.
+- **Stage 4 (Finished)**: At least two independent implementations pass all examples for that syntax unit, and the example set can serve as conformance test cases. The syntax is complete, formally incorporated into this specification, and no longer changed.
+
+## Maturity
+
+FFM is a Living Standard. This specification defines syntax semantics and conformance behavior; it does not require all runtimes to support all syntax. An implementation MAY support only a subset of the syntax; once it claims support for a syntax unit, it MUST conform to that unit's definition and handle unsupported cases according to the fallback behavior specified in this specification.
+
+Maturity is divided into the following levels:
+
+- **Stage 4**: Syntax is frozen, awaiting implementation validation. The syntax no longer changes, but support scope may be limited.
+- **Limited available**: Some runtimes already support it. Authors SHOULD confirm whether the target runtime supports it before use.
+- **Newly available**: Has become a preset syntax, and mainstream runtimes have begun to support it.
+- **Widely available**: Stable syntax, widely supported. Changes require the deprecation process.
+
+Stage 0–3 proposals do not enter this specification because their syntax may change frequently. Experimental content appears in the specification only in the form of Stage 4 or above, and maturity is marked in the corresponding entry. The location and form of maturity are determined by each syntax unit entry and are not required to be at the beginning of the entry. Conformance requirements are tiered by maturity; see the "Conformance" section.
+
+## Relationship Between This Specification and Tutorials
+
+This specification is normative text; it only defines "what it is" and "what MUST be done." Tutorials, READMEs, and migration notes are non-normative content; they MAY contain examples, recommended usage, and explanations of differences from other Markdown styles, but they do not constitute definitions of FFM syntax.
+
+The specification does not repeat tutorial content; examples in tutorials MUST NOT be interpreted as specification requirements. When the specification conflicts with a tutorial, this specification takes precedence.
+
+## Versioning
+
+This specification is published as a Living Standard and does not have a version number. Changes to syntax units are expressed through maturity labels and the deprecation policy; see the "Versioning and Deprecation Strategy" section.

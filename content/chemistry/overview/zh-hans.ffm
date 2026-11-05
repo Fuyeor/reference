@@ -13,5 +13,5 @@
 ## 后续步骤
 
 - 配置[本地开发环境](./development)，以构建和调试 `chemistry` 服务。
-- 查看 [API 端点](./apis/depict)、参数和响应格式。
+- 查看 [API 端点](./api/depict)、参数和响应格式。
 - 查看[如何在 Markdown、HTML 中嵌入](./integration/embed)，或在 [JavaScript 中调用](./integration/javascript/native)。

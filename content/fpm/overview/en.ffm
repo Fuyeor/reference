@@ -6,10 +6,10 @@ FPM is a package registry and command-line publishing tool for source packages. 
 
 | If you want to... | Start here |
 | :--- | :--- |
-| Install FPM and publish your first package | [Get started](../tutorials/getting-started) |
-| Publish an existing package from a specific directory | [Publish a package](../how-to/publish) |
-| Check every command and option | [CLI reference](../reference/cli) |
-| Understand the package and upload workflow | [CLI reference](../reference/cli#publish) |
+| Install FPM and publish your first package | [Get started](./tutorial/getting-started) |
+| Publish an existing package from a specific directory | [Publish a package](./how-to/publish) |
+| Check every command and option | [CLI reference](./reference/cli) |
+| Understand the package and upload workflow | [CLI reference](./reference/cli#publish) |
 
 FPM is designed to be installed globally. After installation, use the `fpm` command directly instead of invoking the generated JavaScript file with Node.js.
 

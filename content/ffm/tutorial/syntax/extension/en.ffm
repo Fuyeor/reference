@@ -51,13 +51,9 @@ graph TD
 ```
 ````
 
-## Simplified Molecular‑Input Line‑Entry System (SMILES)
+## Chemical Formulas (SMILES)
 
-The Simplified Molecular‑Input Line‑Entry System (SMILES) is a specification for unambiguously describing molecular structures using ASCII strings. It transforms complex 2D or 3D chemical structures into plain text that is easy to read and store, widely used in chemical database searches, molecular editing software, and cheminformatics.
-
-You can learn its syntax from the [Daylight SMILES Theory Manual](https://www.daylight.com/dayhtml/doc/theory/theory.smiles.html) or the [OpenSMILES specification](http://opensmiles.org/opensmiles.html), or describe your molecule to an AI in natural language to generate the corresponding SMILES.
-
-In FFM, SMILES rendering is typically provided via the [Fuyeor/chemistry](https://github.com/Fuyeor/chemistry) public API, which wraps RDKit.
+Chemical formulas are input using SMILES (Simplified Molecular Input Line Entry System) syntax. You can learn its syntax specification from the [Daylight SMILES official theory manual](https://www.daylight.com/dayhtml/doc/theory/theory.smiles.html) or the [OpenSMILES open-source standard](http://opensmiles.org/opensmiles.html), or describe it to an AI in natural language to generate the corresponding SMILES. In FFM, SMILES is rendered based on the [Fuyeor/chemistry](https://github.com/Fuyeor/chemistry) public API wrapped with RDKit.
 
 ### Inline Display
 

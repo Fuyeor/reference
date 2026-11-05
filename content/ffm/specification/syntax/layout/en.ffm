@@ -1,0 +1,181 @@
+# Layout Blocks Specification
+
+## Overview
+
+Layout blocks are block-level containers defined by FFM for representing specific layout structures. A layout block begins and ends with fence delimiters, and its interior is recursively parsed according to block-level syntax. Layout blocks may nest other block-level syntax, including other layout blocks.
+
+Layout block fences are recognized before ordinary fenced code blocks. Fences whose language identifier is `slide`, `chain`, or `accordion` are parsed as the corresponding layout block and do not output `<pre><code>`. Fences with other language identifiers are handled as fenced code blocks; see "Block-level · Fenced Code Blocks."
+
+The HTML output of layout blocks anchors semantic classes. Implementations MAY add other classes or wrapper elements in addition to the semantic classes, but MUST NOT omit the core classes defined by the specification. Conformance tests compare core classes and semantic subtrees, ignoring additional classes and external wrapping.
+
+When a layout block is not closed, it continues to the end of the document and falls back as a fenced code block.
+
+## slide
+
+**Syntax**: A ` ```slide ` fence, with slides separated internally by page breaks. A page break is a `---` on a line by itself, with one blank line before and after it.
+
+**Semantics**: slide is a block-level container containing one or more slide-items. The interior of each slide-item is recursively parsed according to block-level syntax.
+
+**Edge cases**:
+
+- There MUST be one blank line before and after the page break `---`. When this is not satisfied, `---` does not constitute a page break and is treated as ordinary text. The current specification requires blank lines; this requirement may be relaxed in the future, but relaxation is not behavior defined by this specification at present.
+- Page breaks support only `---`, not `***` or `___`.
+- slide may nest other block-level syntax internally, including other layout blocks.
+- slide contains at least one slide-item.
+
+**HTML Output**: MUST output `<div class="ffm-slide"><div class="slide-container">...</div></div>`. Each slide-item MUST output `<div class="slide-item">`, with recursively parsed results inside.
+
+**Fallback behavior**: When unsupported, falls back as a fenced code block and outputs `<pre><code class="language-slide">`.
+
+**Example** `layout-slide-basic`
+
+````ffm
+```slide
+First page
+
+---
+
+Second page
+```
+````
+
+```html
+<div class="ffm-slide"><div class="slide-container"><div class="slide-item"><p>First page</p></div><div class="slide-item"><p>Second page</p></div></div></div>
+```
+
+**Example** `layout-slide-no-blank-line`
+
+````ffm
+```slide
+Example content
+---
+Example content
+```
+````
+
+```html
+<div class="ffm-slide"><div class="slide-container"><div class="slide-item"><p>Example content<br>---<br>Example content</p></div></div></div>
+```
+
+## chain
+
+**Syntax**: A ` ```chain ` fence, with the interior composed of nodes. A node title is a `**...**` on a line by itself, followed by the node's example content.
+
+**Semantics**: chain is a block-level container; each node contains a title and example content. Node titles may carry a task status: `**[ ] Title**` is pending, `**[x] Title**` is completed, and `**Title**` is normal.
+
+**Edge cases**:
+
+- A node title MUST occupy a line by itself and be inside `**...**`. A `**` elsewhere in a line is ordinary emphasis and does not constitute a node title.
+- The `[ ]` of a pending title MUST be followed by a space. `[x]` is case-insensitive; `[X]` also indicates completed.
+- The example content under a node title may begin with a blank line or begin directly; the rendering result is the same.
+- When a node has no example content, the `chain-content` element MUST still be output, but its interior is empty.
+- chain may nest other block-level syntax internally, including other layout blocks.
+- chain contains at least one node.
+
+**HTML Output**: MUST output `<div class="ffm-chain">`. Each node MUST output `<div class="chain-item">`; pending nodes add `is-pending`, completed nodes add `is-completed`, and normal nodes add no status class. The interior of a node MUST contain `<div class="chain-marker">`, `<div class="chain-body">`, `<div class="chain-title">`, and `<div class="chain-content">`.
+
+**Fallback behavior**: When unsupported, falls back as a fenced code block and outputs `<pre><code class="language-chain">`.
+
+**Example** `layout-chain-basic`
+
+````ffm
+```chain
+**[ ] Pending node title**
+Example content
+
+**[x] Completed node title**
+Example content
+
+**Normal node title**
+
+Example content
+```
+````
+
+```html
+<div class="ffm-chain"><div class="chain-item is-pending"><div class="chain-marker"></div><div class="chain-body"><div class="chain-title">Pending node title</div><div class="chain-content"><p>Example content</p></div></div></div><div class="chain-item is-completed"><div class="chain-marker"></div><div class="chain-body"><div class="chain-title">Completed node title</div><div class="chain-content"><p>Example content</p></div></div></div><div class="chain-item"><div class="chain-marker"></div><div class="chain-body"><div class="chain-title">Normal node title</div><div class="chain-content"><p>Example content</p></div></div></div></div>
+```
+
+**Example** `layout-chain-empty-content`
+
+````ffm
+```chain
+**Node**
+```
+````
+
+```html
+<div class="ffm-chain"><div class="chain-item"><div class="chain-marker"></div><div class="chain-body"><div class="chain-title">Node</div><div class="chain-content"></div></div></div></div>
+```
+
+**Example** `layout-chain-nested`
+
+````ffm
+```chain
+**This is a slide**
+Below, a slide can be nested:
+
+```slide
+Example content
+
+---
+
+Example content
+```
+
+**Other node**
+```
+````
+
+```html
+<div class="ffm-chain"><div class="chain-item"><div class="chain-marker"></div><div class="chain-body"><div class="chain-title">This is a slide</div><div class="chain-content"><p>Below, a slide can be nested:</p><div class="ffm-slide"><div class="slide-container"><div class="slide-item"><p>Example content</p></div><div class="slide-item"><p>Example content</p></div></div></div></div></div></div><div class="chain-item"><div class="chain-marker"></div><div class="chain-body"><div class="chain-title">Other node</div><div class="chain-content"></div></div></div></div>
+```
+
+## accordion
+
+**Syntax**: A ` ```accordion ` fence, with the interior composed of nodes. A node title is a `**...**` on a line by itself, followed by the node's example content. The syntax is the same as chain, but task status is not supported.
+
+**Semantics**: accordion is a block-level container; each node contains a title and example content. Node example content is collapsed by default.
+
+**Edge cases**:
+
+- A node title MUST occupy a line by itself and be inside `**...**`. A `**` elsewhere in a line is ordinary emphasis.
+- `[ ]` and `[x]` in an accordion node title are ordinary text and do not constitute task status.
+- The example content under a node title may begin with a blank line or begin directly; the rendering result is the same.
+- When a node has no example content, the `accordion-body` element MUST still be output, but its interior is empty.
+- accordion may nest other block-level syntax internally, including other layout blocks. When nesting code blocks, use four backticks.
+- accordion contains at least one node.
+
+**HTML Output**: MUST output `<div class="ffm-accordion">`. Each node MUST output `<details>`, containing `<summary>` and `<div class="accordion-body">` internally. The `name` attribute is not anchored; whether to output it is decided by the implementation, and tests ignore this attribute.
+
+**Fallback behavior**: When unsupported, falls back as a fenced code block and outputs `<pre><code class="language-accordion">`.
+
+**Example** `layout-accordion-basic`
+
+````ffm
+```accordion
+**Node title one**
+Example content one
+
+**Node title two**
+
+Example content two
+```
+````
+
+```html
+<div class="ffm-accordion"><details><summary>Node title one</summary><div class="accordion-body"><p>Example content one</p></div></details><details><summary>Node title two</summary><div class="accordion-body"><p>Example content two</p></div></details></div>
+```
+
+**Example** `layout-accordion-no-task`
+
+````ffm
+```accordion
+**[ ] Example title**
+Example content
+```
+````
+
+```html
+<div class="ffm-accordion"><details><summary>[ ] Example title</summary><div class="accordion-body"><p>Example content</p></div></details></div>
+```

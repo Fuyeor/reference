@@ -29,7 +29,7 @@
       ]
     },
     {
-      "slug": "apis",
+      "slug": "api",
       "title": {
         "zh-hans": "服务端点",
         "en": "API Reference"

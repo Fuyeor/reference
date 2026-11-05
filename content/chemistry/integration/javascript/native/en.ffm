@@ -72,7 +72,7 @@ The endpoint returns `4xx` or `5xx` status codes when the request fails. Always 
 | `404` | The provided compound name was not found in PubChem. |
 | `502` | PubChem upstream service is unavailable. |
 
-For detailed error payloads, see the [API reference](/chemistry/apis/depict).
+For detailed error payloads, see the [API reference](/chemistry/api/depict).
 
 ## Customizing colors
 
@@ -95,4 +95,4 @@ fetch(url)
   });
 ```
 
-For a complete reference of supported color keys and value formats, see the [API reference](/chemistry/apis/depict).
+For a complete reference of supported color keys and value formats, see the [API reference](/chemistry/api/depict).

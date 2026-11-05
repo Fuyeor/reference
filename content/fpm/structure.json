@@ -10,7 +10,7 @@
   "navigation": [
     { "slug": "overview" },
     {
-      "slug": "tutorials",
+      "slug": "tutorial",
       "title": {
         "zh-hans": "教程",
         "en": "Tutorials"

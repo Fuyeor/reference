@@ -1,0 +1,413 @@
+# Block-level Syntax Specification
+
+## Overview
+
+Block-level parsing is performed before inline parsing. Block-level parsing identifies block-level syntax units in a document and determines their boundaries and nesting relationships; the parts of block-level units that contain inline content are then handed over to inline parsing.
+
+Block-level syntax units are identified in the following order:
+
+1. Blockquote fence (` ```quote `)
+2. Fenced code block (`` ``` ``)
+3. Block-level annotation (`#[`)
+4. Heading (`#`)
+5. Thematic break (`---`, `*`, `___`)
+6. Math block (`$$`)
+7. List (`-`, `*`, number followed by `.`)
+8. Blockquote (`>`)
+9. Table (`|`)
+10. Paragraph
+11. Blank line
+
+Fenced code blocks are identified first because their internal content is not parsed at all. Layout blocks (blockquotes, slides, chain-of-thought, collapsible accordion) are defined in the "Layout Blocks" section and are outside the scope of this section.
+
+## Output and Wrapping
+
+The HTML output of block-level syntax units anchors semantic elements. Implementations MAY add wrapper elements outside semantic elements, provided that the wrapping does not change the semantic structure, does not change the text content, and does not introduce executable content.
+
+Conformance tests compare semantic subtrees: comparison starts from the outermost elements explicitly listed in the specification clauses and proceeds downward, ignoring external wrapper elements. Wrapper elements MAY carry attributes such as `id`, `class`, and `aria-*`.
+
+Text content inside a semantic subtree MUST be HTML entity escaped: `&` is output as `&amp;`, `<` is output as `&lt;`, and `>` is output as `&gt;`.
+
+## Indentation
+
+Block-level indentation is measured in spaces. When a tab (U+0009) appears in leading consecutive whitespace on a line, it is counted as 2 spaces. When tabs and spaces are mixed, they are first expanded to spaces, and then the indentation level is calculated.
+
+Tab expansion applies only to the calculation of block-level indentation. Tabs in inline content and inside fenced code blocks are preserved literally and are not expanded.
+
+## Blank Lines
+
+**Syntax**: A line containing no characters, or a line containing only spaces or tabs.
+
+**Semantics**: A blank line ends the current paragraph or block-level container and produces no visible output.
+
+**HTML Output**: No element is output.
+
+## Paragraphs
+
+**Syntax**: One or more consecutive non-blank lines that do not match any other block-level syntax unit.
+
+**Semantics**: A paragraph is the basic unit of block-level content. Consecutive physical lines within a paragraph belong to the same paragraph, and line endings between lines produce inline line breaks (see "Line Breaks").
+
+**Edge cases**:
+
+- A blank line ends a paragraph.
+- A paragraph MUST NOT contain the starting line of a block-level syntax unit.
+
+**HTML Output**: MUST output `<p>`.
+
+**Example** `block-paragraph-basic`
+
+```ffm
+This is the first paragraph.
+
+This is the second paragraph.
+```
+
+```html
+<p>This is the first paragraph.</p><p>This is the second paragraph.</p>
+```
+
+## Headings
+
+**Syntax**: One to six `#` characters at the beginning of a line, followed by a space, followed by heading text.
+
+**Semantics**: Headings represent the section hierarchy of a document. The number of `#` characters corresponds to heading levels 1 through 6.
+
+**Alias**: Headings are also called "hash headings."
+
+**Edge cases**:
+
+- `#` MUST be at the beginning of the line.
+- There MUST be a space between `#` and the heading text. Without a space, the line is treated as a paragraph.
+- More than six `#` characters are treated as a paragraph.
+- If a sequence of `#` characters at the end of heading text is preceded by a space, it is treated as an optional closing sequence and is not counted as part of the heading text.
+
+**HTML Output**: MUST output `<h1>` through `<h6>`, with the level determined by the number of `#` characters.
+
+**Example** `block-heading-basic`
+
+```ffm
+## Second-level heading
+```
+
+```html
+<h2>Second-level heading</h2>
+```
+
+**Example** `block-heading-no-space`
+
+```ffm
+#No space
+```
+
+```html
+<p>#No space</p>
+```
+
+## Lists
+
+**Syntax**:
+
+- Unordered list item: `-` or `*`, followed by a space, followed by list item content.
+- Ordered list item: a number, followed by an ASCII period `.`, followed by a space, followed by list item content.
+
+**Semantics**: A list is a block-level container containing one or more list items. List items MAY contain inline content and nested block-level content.
+
+**Edge cases**:
+
+- There MUST be a space between `-` or `*` and the content.
+- The starting number of an ordered list does not affect rendering; rendering numbers items according to their order in the list.
+- Nested lists use 2-space indentation. Indentation of less than 2 spaces does not constitute nesting.
+- The marker width of an ordered list does not affect indentation calculation: nested content after `1.`, `10.`, or `100.` is uniformly indented by 2 spaces.
+- When a list item's content is empty, the item produces no content but still counts as one list item.
+- When a list item contains multiple block-level units, subsequent block-level units MUST be indented by 2 spaces.
+
+**HTML Output**: Unordered lists MUST output `<ul>`, ordered lists MUST output `<ol>`, and each list item MUST output `<li>`. Content inside a list item MUST be wrapped in `<p>`, regardless of whether the item contains only inline content or contains multiple block-level units.
+
+**Example** `block-list-unordered`
+
+```ffm
+- First item
+- Second item
+```
+
+```html
+<ul><li><p>First item</p></li><li><p>Second item</p></li></ul>
+```
+
+**Example** `block-list-ordered`
+
+```ffm
+1. First item
+2. Second item
+```
+
+```html
+<ol><li><p>First item</p></li><li><p>Second item</p></li></ol>
+```
+
+**Example** `block-list-nested`
+
+```ffm
+1. First item
+  - Nested item
+2. Second item
+```
+
+```html
+<ol><li><p>First item</p><ul><li><p>Nested item</p></li></ul></li><li><p>Second item</p></li></ol>
+```
+
+### Blockquotes
+
+**Syntax**:
+
+- Starts with `>`, followed by an optional single space, followed by content.
+- Or uses a ` ```quote ` fence.
+
+**Semantics**: A blockquote is a block-level container whose interior is recursively parsed according to block-level syntax. The `>` form and the `quote` fence form are completely equivalent.
+
+**Edge cases**:
+
+- `>content` and `> content` are equivalent.
+- `>` MAY be nested: `>> content` represents a blockquote inside a blockquote.
+- The closing delimiter of a `quote` fence is three or more backticks, with a count not less than the opening delimiter.
+- An unclosed `quote` fence continues to the end of the document.
+
+**HTML Output**: MUST output `<blockquote>`, with recursively parsed results inside.
+
+**Fallback behavior**: `>` does not fall back. When a `quote` fence is unsupported, it falls back as a fenced code block and outputs `<pre><code class="language-quote">`.
+
+**Example** `block-quote-angle`
+
+```ffm
+> Arbitrary content
+> - List item
+```
+
+```html
+<blockquote><p>Arbitrary content</p><ul><li><p>List item</p></li></ul></blockquote>
+```
+
+**Example** `block-quote-fence`
+
+````ffm
+```quote
+Arbitrary content
+- List item
+```
+````
+
+```html
+<blockquote><p>Arbitrary content</p><ul><li><p>List item</p></li></ul></blockquote>
+```
+
+## Fenced Code Blocks
+
+**Syntax**: Starts with three or more backticks (`` ` ``), followed by an optional language identifier, and ends with the same number of backticks.
+
+**Semantics**: The content of a fenced code block is preserved literally and is not parsed as inline or block-level content.
+
+**Edge cases**:
+
+- The number of backticks in the closing fence MUST NOT be less than that in the opening fence.
+- The language identifier immediately follows the opening fence and contains no spaces.
+- An unclosed fenced code block continues to the end of the document.
+- Tabs inside a fenced code block are not expanded.
+
+**Language identifiers**:
+
+- The language identifier is output as-is as the suffix of `language-`. For example, `js` outputs `class="language-js"`.
+- Implementations MAY expand abbreviations to full names. For example, `js` may be expanded to `javascript`, outputting `class="language-javascript"`.
+- The expanded identifier MUST still be prefixed with `language-`.
+- Implementations MUST disclose their expansion rules.
+- Conformance tests accept both the as-is identifier and the publicly disclosed expanded form.
+
+**HTML Output**: MUST output `<pre><code>`. When a language identifier is present, `<code>` MUST carry `class="language-identifier"`. Content MUST be HTML entity escaped.
+
+**Example** `block-fenced-code-basic`
+
+````ffm
+```js
+const a = 1;
+```
+````
+
+```html
+<pre><code class="language-js">const a = 1;</code></pre>
+```
+
+**Example** `block-fenced-code-unclosed`
+
+````ffm
+```js
+const a = 1;
+````
+
+```html
+<pre><code class="language-js">const a = 1;</code></pre>
+```
+
+## Thematic Breaks
+
+**Syntax**: Three or more consecutive `-` characters at the beginning of a line; or three or more consecutive `*` characters; or three or more consecutive `_` characters. Spaces MAY be included.
+
+**Undefined behavior**: Mixing characters (for example, `-*-`) is UB. Implementations that allow mixing may keep the regular expression simple; implementations that prohibit mixing may additionally check character consistency. Neither handling violates this specification.
+
+**Edge cases**:
+
+- When the number of characters is fewer than three, the line is treated as a paragraph or list.
+- A thematic break line MUST NOT contain other characters (except spaces).
+- Thematic breaks are identified before unordered lists.
+
+**HTML Output**: MUST output `<hr>` or its equivalent serialized forms `<hr />` and `<hr/>`.
+
+**Example** `block-thematic-break-dash`
+
+```ffm
+---
+```
+
+```html
+<hr>
+```
+
+**Example** `block-thematic-break-asterisk`
+
+```ffm
+***
+```
+
+```html
+<hr>
+```
+
+## Tables
+
+**Syntax**:
+
+- The first row is the header row, with cells separated by `|`.
+- The second row is the delimiter row, with cell content `---`; alignment may be specified with `:`.
+- Subsequent rows are data rows.
+
+**Semantics**: A table is a block-level container that organizes content by rows and columns.
+
+**Edge cases**:
+
+- When the header row and delimiter row have different column counts, the delimiter row takes precedence.
+- When a data row has fewer columns than the header, missing cells are empty; when it has more columns than the header, extra cells are discarded.
+- Cell content is parsed according to inline syntax.
+- Cells MUST NOT contain block-level syntax units.
+- A `|` in cell content MUST be written as `\|` and is restored to `|` on output. `\|` inside a cell does not participate in column separation.
+- In the delimiter row, `:---` indicates left alignment, `:---:` indicates center alignment, and `---:` indicates right alignment.
+
+**HTML Output**: MUST output `<table>`. The header row MUST be output in a `<tr>` inside `<thead>`, and header cells are output as `<th>`. Data rows MUST be output in `<tr>` elements inside `<tbody>`, and data cells are output as `<td>`. Alignment information MUST be expressed through the `align` attribute, with values `left`, `center`, and `right`. Cells with unspecified alignment do not output an `align` attribute.
+
+**Example** `block-table-basic`
+
+```ffm
+| Name | Occupation |
+| --- | --- |
+| Fuyeor | Designer |
+```
+
+```html
+<table><thead><tr><th>Name</th><th>Occupation</th></tr></thead><tbody><tr><td>Fuyeor</td><td>Designer</td></tr></tbody></table>
+```
+
+**Example** `block-table-align`
+
+```ffm
+| Left | Center | Right |
+| :--- | :---: | ---: |
+| a | b | c |
+```
+
+```html
+<table><thead><tr><th align="left">Left</th><th align="center">Center</th><th align="right">Right</th></tr></thead><tbody><tr><td align="left">a</td><td align="center">b</td><td align="right">c</td></tr></tbody></table>
+```
+
+**Example** `block-table-escaped-pipe`
+
+```ffm
+| Name | Occupation |
+| --- | --- |
+| Fuyeor | Designer \| Developer |
+```
+
+```html
+<table><thead><tr><th>Name</th><th>Occupation</th></tr></thead><tbody><tr><td>Fuyeor</td><td>Designer | Developer</td></tr></tbody></table>
+```
+
+## Headerless Tables
+
+**Syntax**: The first row is a delimiter row, with no header row. Delimiter row cells are `---`, and alignment may be specified with `:`. Subsequent rows are data rows.
+
+**Semantics**: A headerless table is a variant of a table with no header; all rows are data rows.
+
+**Edge cases**:
+
+- The first row MUST be a delimiter row. There MUST be at least one data row after the delimiter row.
+- Other edge cases are the same as those for tables.
+
+**HTML Output**: MUST output `<table>` and MUST NOT output `<thead>`. All rows MUST be output in `<tr>` elements inside `<tbody>`, and cells are output as `<td>`. Alignment information is expressed in the same way as for tables.
+
+**Example** `block-table-headless`
+
+```ffm
+| --- | --- |
+| Name | Fuyeor |
+| Occupation | Designer |
+```
+
+```html
+<table><tbody><tr><td>Name</td><td>Fuyeor</td></tr><tr><td>Occupation</td><td>Designer</td></tr></tbody></table>
+```
+
+## Math Blocks
+
+**Syntax**: Starts with `$$` and ends with `$$`, with a mathematical expression in between. The opening and closing delimiters may each occupy their own line, or may be on the same line as the expression.
+
+**Semantics**: A math block is a block-level unit that presents a mathematical formula.
+
+**Edge cases**:
+
+- Math blocks MUST NOT be identified inline.
+- An unclosed math block continues to the end of the document and is treated as text.
+- Tabs inside a math block are preserved literally.
+
+**HTML Output**: MUST output a container element that carries the math rendering result. The container MUST carry a recognizable marker, such as `class="math-block"` or an equivalent attribute. The container MAY carry implementation-added `data-*` attributes. The specific rendering method is determined by the implementation. Scripts in the expression MUST NOT be executed.
+
+**Fallback behavior**: When no math renderer is configured, the raw `$$...$$` text MUST be output and HTML entity escaped.
+
+**Example** `block-math-basic`
+
+```ffm
+$$
+a + b = c
+$$
+```
+
+```html
+<div class="math-block">a + b = c</div>
+```
+
+### Block-level Annotations
+
+**Syntax**: An annotation `#[...]` on a line by itself, with only the beginning of the line, the end of the line, or whitespace before and after it.
+
+**Semantics**: A block-level annotation provides structured metadata for the block-level container in which it appears. Block-level annotations produce no visible output.
+
+**Edge cases**:
+
+- A block-level annotation MUST occupy a line by itself. When there is other content before or after it, it is treated as an inline annotation; see "Inline Annotations."
+- Block-level annotations MUST NOT span lines.
+- The semantics of a block-level annotation within a block-level container are defined by the container.
+- When a block-level annotation is not inside any block-level container, it is undefined behavior (UB).
+- The parsing rules inside block-level annotations are not defined in this section.
+
+**HTML Output**: Supporting renderers output no element.
+
+**Fallback behavior**: Defined by the containing block-level container. When the container falls back as a fenced code block, the block-level annotation is output as-is as fence content and is not handled separately.
+
+**Example**: No standalone example. The actual usage and fallback behavior of block-level annotations are shown in the container's entry.

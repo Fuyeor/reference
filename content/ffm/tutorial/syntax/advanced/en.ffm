@@ -1,4 +1,4 @@
-# Layout Code Blocks
+# Layout Blocks
 
 FFM currently supports table, slide, chain, and accordion syntax. Except for tables, all are wrapped in fenced code blocks.
 
@@ -8,9 +8,9 @@ Tables are typically used to display structured data comparisons.
 
 ### Basic Syntax
 
-- Declare the header in the first row, using `|` to separate columns.
-- In the second row, declare the separator line, using `|` and at least three consecutive hyphens `---` (more than three are allowed) to separate columns.
-- Write the table data in subsequent rows.
+- Declare the header in the first row, using `|` to separate the columns. For a headerless table, this row can be omitted.
+- Declare the separator line in the second row, using `|` and at least three consecutive hyphens `---` (more than three are allowed) to separate the columns.
+- Write the table data in the following rows.
 
 The header supports alignment control using colons `:`:
 
@@ -37,6 +37,14 @@ The header supports alignment control using colons `:`:
 | :--- | :---: | ---: |
 | Content | Content | Content |
 | Long text | Long text | Long text |
+```
+
+#### Headerless Table
+
+```ffm
+| --- | --- |
+| Name | Fuyeor |
+| Occupation | Designer |
 ```
 
 ### Styling Tips

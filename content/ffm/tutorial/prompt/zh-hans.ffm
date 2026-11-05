@@ -1,10 +1,10 @@
-# AI-Assisted Writing Prompts
+# AI 辅助写作提示词
 
-FFM is a modern typesetting specification that is exceptionally AI-friendly. To help you get started seamlessly, we have prepared official, dedicated AI prompts for you.
+FFM 是一项对 AI 极其友好的现代排版规范。为了让你能够无缝上手，我们为你准备了官方专属的 AI 提示词（Prompt）。
 
-Simply copy the prompt inside the box below and send it to any large language model — the AI will then produce beautifully formatted text that fully complies with the FFM standard!
+你只需将下方框内的提示词**复制并发送给任意大语言模型**，AI 就会输出完全符合 FFM 标准的精美文本！
 
-## General FFM Conversion Prompt
+## 通用 FFM 转换提示词
 
 ```ffm
 <|system|>
@@ -17,7 +17,7 @@ The following document is the specification for Fuyeor Flavored Markdown (FFM), 
 - **Same**: Inline code, Lists, Links, Images same as CommonMark; Tables, Task lists same as GitHub Flavored Markdown.
 - **Nesting**: When nesting code blocks inside any block (e.g., chain, accordion, markdown), always use more backticks for the outer fence to prevent collision.
 
-## FFM-specific Block Syntaxes
+## FFM Layout Block
 - **slide**: Use for parallel items/sliders. The space before and after `---` must be two separate lines.
     ```slide
     paragraph
@@ -28,11 +28,11 @@ The following document is the specification for Fuyeor Flavored Markdown (FFM), 
     ```
 - **chain**: Use for FAQs, thought processes, timelines, task lists, and tutorial steps. Bold titles support task list syntax (`**[x] ...**`, `**[ ] ...**`).
     ```chain
-    **Title 1**
-    paragraph
+**Title 1**
+paragraph
 
-    **Title 2**
-    paragraph
+**Title 2**
+paragraph
     ```
 - **accordion**: Use for hiding details. Title node does NOT support task list syntax. If embedding code inside, use four backticks: ` ````accordion `.
 

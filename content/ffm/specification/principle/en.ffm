@@ -1,0 +1,68 @@
+# Design Principles
+
+This section defines the design principles of FFM. These principles are not regulations for specific syntax, but rather criteria that constrain FFM specification development and proposal review. When disputes arise in new proposals or specification revisions, the principles in this section serve as the basis for weighing tradeoffs. Principles may conflict with one another, and judgment must be made according to the specific situation.
+
+These principles are pragmatic rules of thumb, not absolute dogma. This section is informative content; where it conflicts with normative provisions, the normative provisions take precedence. This section does not authorize any unlisted constructs.
+
+## Web-first
+
+FFM is intended for Web transmission and presentation. When multiple syntax approaches can express the same semantics, prefer the approach with the simplest input, smallest transmission size, lowest parsing overhead, and direct support by browsers.
+
+**Examples**:
+
+- FFM documents are plain text and do not rely on binary packaging.
+- Prefer automatic link detection rather than requiring authors to write the full protocol.
+- Tabs are not recommended as an indentation method: in browsers, the Tab key usually triggers focus switching, making it difficult for authors to enter directly.
+
+## Composition-first
+
+When existing syntax units can express new semantics through composition, prefer composition and do not invent new delimiters or mini-languages. A new syntax unit SHOULD have a clear requirement that cannot be satisfied through composition.
+
+**Examples**:
+
+- chat uses annotation syntax to carry message headers rather than inventing new message markers.
+- Tables and headerless tables reuse the same `|` and `---` syntax; chain and accordion use the same structure.
+- Layout blocks use the delimiter form of fenced code blocks rather than inventing new symbols for each kind of layout block.
+
+## Do Not Shift Costs
+
+Syntax choices SHOULD control the shared costs of the FFM ecosystem. If a syntax unit would cause all implementations to bear additional parsing, rendering, or transmission costs—even implementations that choose not to use that syntax—then that syntax SHOULD NOT enter the specification.
+
+**Examples**:
+
+- Reject inline HTML: supporting HTML means all implementations (even those with the feature disabled) must carry HTML parsing and sanitizer code. Documents become heavier, rendering may require launching a webview, and the syntax cannot be mapped to the host platform's native semantics.
+- Treat arbitrary frontmatter fields with caution: most fields have no long-term significance, serve only as conventions for specific scenarios, and easily become outdated.
+- When style decoration is needed, the direction is to handle it with a lightweight, optional parameter language rather than introducing full HTML + CSS into the core specification.
+- The core specification does not define HTML parsing rules. Scenarios requiring HTML are left to implementations to provide as extensions; extensions are not FFM syntax and are not constrained by this specification.
+
+## Principle of Least Surprise
+
+Syntax SHOULD NOT cause most users to unintentionally produce unexpected rendering effects. If a construct is easily triggered by mistake under common input, and the mistaken result clearly differs from the author's intent, then that syntax SHOULD NOT be adopted.
+
+**Examples**:
+
+- Reject Setext headings: an underline accidentally becomes an H2.
+- Reject indented code blocks: accidental indentation triggers a code block.
+- Reject `__bold__` and `_italic_`: CJK does not use spaces for word segmentation, so ambiguity is severe.
+- Reject `~~` strikethrough: it conflicts with the use of the tilde in CJK.
+- Mixing horizontal rule characters is undefined behavior; no particular behavior is mandated.
+
+## Do Not Make Assumptions for Authors
+
+Syntax SHOULD NOT assign stronger semantics to the author than the author expressed. For content the author did not express, the specification SHOULD NOT output a value with specific semantics to fill it in. If the author did not provide some information, the output SHOULD preserve the absence of that information rather than replacing it with a default value.
+
+**Examples**:
+
+- When image alternative text is empty, omit the `alt` attribute rather than outputting `alt=""`. In HTML, `alt=""` means "decorative image," whereas the author not providing alternative text may simply mean they did not want to write it or did not know `alt` exists; it does not mean the image is decorative.
+- Empty table cells are not automatically filled with placeholders; they remain empty.
+- Empty link text is not automatically filled with the URL.
+
+## Separation of Specification and Implementation
+
+The specification anchors observable output, not internal implementation structure. The definition of a syntax unit must provide a testable input-output correspondence; implementations may use any internal representation as long as the observable output conforms to the specification.
+
+**Examples**:
+
+- Tables anchor the `<table>` semantic subtree and allow external wrapper elements.
+- Math formulas anchor the container class, not the internal rendering markup.
+- A plugin implementation is considered to support the syntax as long as it conforms to the specification; independence means that parsing and rendering logic are independently implemented, not that distribution channels differ (see "Proposal Stages").

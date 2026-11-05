@@ -4,7 +4,10 @@ If you are already familiar with basic Markdown, you have practically mastered 9
 
 ## Headings
 
-Use `#` to declare headings. The number of `#` characters (1–6) corresponds to heading levels 1 through 6.
+Use `#` to declare headings:
+
+- The `#` symbol must be at the beginning of the line and **must be followed by a space**
+- The number of `#` symbols corresponds to heading levels 1 through 6, with a maximum of 6 heading levels supported
 
 ```ffm
 # Heading 1
@@ -19,11 +22,6 @@ Use `#` to declare headings. The number of `#` characters (1–6) corresponds to
 
 ###### Heading 6
 ```
-
-**🌟 NOTE:**
-
-- The `#` symbol must be at the beginning of a line and **must be followed by a space**.
-- FFM only supports headings declared with `#`; it does not support using `===` or `---` placed below the text.
 
 ## Text Emphasis
 
@@ -59,7 +57,9 @@ This is __underlined content, usually representing a conclusive statement__.
 
 ## Lists
 
-FFM supports unordered and ordered lists. Unordered lists support both `*` and `-`, but `-` is recommended; create sub‑lists by indenting with 2 spaces:
+FFM supports unordered and ordered lists, both of which use 2-space indentation to create sublists.
+
+Unordered lists start with `*` or `-`; these are equivalent syntax:
 
 ````slide
 ```ffm
@@ -85,12 +85,12 @@ FFM supports unordered and ordered lists. Unordered lists support both `*` and `
 ```
 ````
 
-For ordered lists, start directly with a number followed by a **half-width** period `.`. Use 4 spaces for nesting:
+For ordered lists, start with a number followed by a period `.`:
 
 ```ffm
 1. First item
-    - Nested unordered item 1
-        - Third-level item
+  - Nested unordered item 1
+    - Third-level item
 2. Second item
 3. Third item
 ```

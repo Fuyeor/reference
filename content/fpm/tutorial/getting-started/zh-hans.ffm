@@ -98,4 +98,4 @@ fpm publish
 fpm publish --json
 ```
 
-命令会输出包名、版本、归档 URL 和 SHA-256 校验和。CI 和指定目录发布方式请继续阅读[发布包](../../how-to/publish)。
+命令会输出包名、版本、归档 URL 和 SHA-256 校验和。CI 和指定目录发布方式请继续阅读[发布包](./../how-to/publish)。

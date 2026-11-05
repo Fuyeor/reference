@@ -1,0 +1,412 @@
+# Inline Syntax Specification
+
+## Overview
+
+Inline content appears inside block-level units. Inline parsing is performed after block-level parsing is complete, identifying inline syntax units line by line within block-level units that contain inline content.
+
+Inline syntax units are identified in the following order:
+
+1. Escapes (`\`)
+2. Inline code (`` ` ``)
+3. Inline annotations (`#[`)
+4. Images and links (`![`, `[`)
+5. Emphasis, underline, strikethrough (`*`, `**`, `***`, `__`, `--`)
+6. Inline math expressions (`$`)
+7. Text
+
+Characters that do not match any syntax unit are presented as text. Delimiters of inline units MUST NOT cross blank lines.
+
+## Output and Wrapping
+
+The HTML output of inline syntax units anchors semantic elements. Implementations MAY add wrapper elements outside semantic elements, provided that the wrapping does not change the semantic structure, does not change the text content, and does not introduce executable content.
+
+Conformance tests compare semantic subtrees: comparison starts from the outermost elements explicitly listed in the specification clauses and proceeds downward, ignoring external wrapper elements. Wrapper elements MAY carry attributes such as `id`, `class`, and `aria-*`.
+
+Text content inside a semantic subtree MUST be HTML entity escaped: `&` is output as `&amp;`, `<` is output as `&lt;`, and `>` is output as `&gt;`.
+
+## Text
+
+**Syntax**: Any sequence of characters other than the starting characters of inline syntax.
+
+**Semantics**: Text is the basic unit of inline content and is presented as-is.
+
+**HTML Output**: Output the character sequence after HTML entity escaping, without additional wrapping elements.
+
+**Example** `inline-text-basic`
+
+```ffm
+Hello & welcome
+```
+
+```html
+<p>Hello &amp; welcome</p>
+```
+
+## Escapes
+
+**Syntax**: `\` followed by one ASCII punctuation character.
+
+**Semantics**: An escape removes the syntactic meaning of the immediately following ASCII punctuation character and outputs it literally.
+
+**Edge cases**:
+
+- When `\` is followed by a non-ASCII punctuation character, the `\` is literal text and does not produce an escape.
+- `\\` outputs one `\`.
+- An escape applies only to the one character immediately following it.
+
+**HTML Output**: Output the literal form of the escaped character and do not output the `\`.
+
+**Example** `inline-escape-basic`
+
+```ffm
+\*not italic\*
+```
+
+```html
+<p>*not italic*</p>
+```
+
+**Example** `inline-escape-non-ascii` (edge case: `\` followed by a non-ASCII character)
+
+```ffm
+\中
+```
+
+```html
+<p>\中</p>
+```
+
+## Inline Code
+
+**Syntax**: One or more backticks (`` ` ``) wrap the content, and the same number of backticks ends it.
+
+**Semantics**: The content of inline code is presented literally and is not parsed as inline content.
+
+**Edge cases**:
+
+- When backticks appear in the content, use more backticks as delimiters than the maximum number of consecutive backticks in the content.
+- If the content begins and ends with a space and is not entirely spaces, remove one space from each end.
+- Inline code MUST NOT span lines.
+
+**HTML Output**: MUST output `<code>`. Text inside `<code>` MUST be HTML entity escaped.
+
+**Example** `inline-code-basic`
+
+```ffm
+Use `**literal**`
+```
+
+```html
+<p>Use <code>**literal**</code></p>
+```
+
+**Example** `inline-code-backtick` (edge case: content contains a backtick)
+
+```ffm
+``a ` b``
+```
+
+```html
+<p><code>a ` b</code></p>
+```
+
+## Inline Annotations
+
+**Syntax**: Starts with `#[` and ends with `]`. The interior is annotation content.
+
+**Semantics**: An inline annotation provides structured metadata at its position. The annotation itself produces no visible output.
+
+**Edge cases**:
+
+- Annotations MUST NOT span lines. When not closed on the same line, they are treated as text.
+- The parsing rules inside annotations are not defined in this section. The language of annotation content will be specified separately once it stabilizes. Currently, only the boundary between `#[` and `]` is specified.
+- When it occupies a line by itself (with only the beginning of the line, the end of the line, or whitespace before and after), it is a block-level annotation and is handled according to block-level syntax; otherwise, it is an inline annotation.
+
+**HTML Output**: No element is output.
+
+**Fallback behavior**: Renderers that do not support annotations MUST output the raw `#[...]` text and HTML entity escape it.
+
+**Example** `inline-annotation-basic`
+
+```ffm
+The molecule is #[smiles: CCO] in this context.
+```
+
+```html
+<p>The molecule is  in this context.</p>
+```
+
+**Example** `inline-annotation-unclosed` (edge case: annotation is not closed)
+
+```ffm
+An unclosed #[annotation
+```
+
+```html
+<p>An unclosed #[annotation</p>
+```
+
+## Emphasis
+
+**Syntax**:
+
+- `*content*`: italic
+- `**content**`: bold
+- `***content***`: bold italic
+
+**Semantics**: Emphasis changes the presentation style of content without changing the text itself.
+
+**Edge cases**:
+
+- Delimiters MUST be immediately adjacent to non-whitespace characters. When this is not satisfied, the delimiters are treated as text.
+- The interior of delimiters MUST NOT be empty.
+- Delimiters MUST appear in pairs.
+- The interior of delimiters MAY contain text in languages such as Chinese that do not use spaces for word segmentation.
+
+**HTML Output**:
+
+- Italic MUST output `<em>`.
+- Bold MUST output `<strong>`.
+- Bold italic MUST output `<strong><em>...</em></strong>`.
+
+**Example** `inline-emphasis-basic`
+
+```ffm
+*italic* and **bold**
+```
+
+```html
+<p><em>italic</em> and <strong>bold</strong></p>
+```
+
+**Example** `inline-emphasis-cjk` (edge case: delimiters are adjacent to Chinese text; no spaces are needed)
+
+```ffm
+这是**粗体**文字
+```
+
+```html
+<p>这是<strong>粗体</strong>文字</p>
+```
+
+**Example** `inline-emphasis-empty` (edge case: interior of delimiters is empty; treated as text)
+
+```ffm
+****
+```
+
+```html
+<p>****</p>
+```
+
+## Underline
+
+**Syntax**: `__content__`.
+
+**Semantics**: Underline changes the presentation style of content without changing the text itself.
+
+**Edge cases**: The same delimiter rules as for emphasis apply.
+
+**HTML Output**: MUST output `<ins>`.
+
+**Example** `inline-underline-basic`
+
+```ffm
+__underline__
+```
+
+```html
+<p><ins>underline</ins></p>
+```
+
+## Strikethrough
+
+**Syntax**: `--content--`.
+
+**Semantics**: Strikethrough changes the presentation style of content without changing the text itself.
+
+**Edge cases**: The same delimiter rules as for emphasis apply. `--` is recognized only inline; `---` at the beginning of a line is a block-level thematic break and is outside the scope of inline parsing.
+
+**HTML Output**: MUST output `<del>`.
+
+**Example** `inline-strikethrough-basic`
+
+```ffm
+--deleted--
+```
+
+```html
+<p><del>deleted</del></p>
+```
+
+## Links
+
+**Syntax**: `[text](URL)`.
+
+**Semantics**: A link associates text with a target address.
+
+**Edge cases**:
+
+- The URL MUST be an absolute URL beginning with `http://` or `https://`.
+- Angle-bracket autolinks `<...>` are not part of FFM link syntax. When automatic linking is needed, write a bare URL directly, or write a URL with the `http://` or `https://` protocol.
+- When the link target is not a valid URL, the entire `[...](...)` structure is treated as text.
+- When the link target begins with `key:`, it is experimental syntax, is not currently part of this specification, and is treated as text.
+
+**HTML Output**: MUST output `<a href="URL">`. The `href` attribute value MUST be HTML attribute escaped.
+
+**Example** `inline-link-basic`
+
+```ffm
+[example](https://example.com)
+```
+
+```html
+<p><a href="https://example.com">example</a></p>
+```
+
+**Example** `inline-link-invalid-url` (edge case: target is not a valid URL; treated as text)
+
+```ffm
+[example](not-a-url)
+```
+
+```html
+<p>[example](not-a-url)</p>
+```
+
+## Automatic Links
+
+**Semantics**: Automatic linking (linkify) automatically converts bare URLs that match the rules into links.
+
+**Rules**:
+
+- The protocol part MAY be omitted; when omitted, it is treated as `https://`.
+- Which domains are recognized is decided by the implementation. An implementation MAY recognize only some domains, or MAY recognize more domains.
+- Implementations SHOULD disclose their linkify domain set or recognition rules so that authors can confirm which constructs will be converted to links.
+- Bare text that does not conform to the implementation's rules is not converted to a link.
+
+**HTML Output**: The same as for "Links". The text content of an automatic link is the same as `href`, except that when the protocol is omitted, the text content is the original form and `href` is the completed URL.
+
+**Example** `inline-linkify-basic`
+
+```ffm
+Visit example.com for details.
+```
+
+```html
+<p>Visit <a href="https://example.com">example.com</a> for details.</p>
+```
+
+**Example** `inline-linkify-unrecognized` (edge case: the implementation does not recognize the domain; treated as text)
+
+```ffm
+Visit example.invalid for details.
+```
+
+```html
+<p>Visit example.invalid for details.</p>
+```
+
+## Images
+
+**Syntax**: `![alternative text](URL)` or `![](URL)`.
+
+**Semantics**: An image unit embeds an image at an inline position.
+
+**Edge cases**:
+
+- Alternative text MAY be empty. Empty alternative text means the author did not provide alternative text; it does not mean the image is decorative.
+- When alternative text contains inline syntax, it is parsed according to inline syntax and then output as alternative text.
+
+**HTML Output**: MUST output `<img src="URL">`. When alternative text is present, output `alt="alternative text"`; when alternative text is empty, omit the `alt` attribute and MUST NOT output `alt=""`. The `src` and `alt` attribute values MUST be HTML attribute escaped.
+
+**Example** `inline-image-basic`
+
+```ffm
+![example image](https://example.com/image.png)
+```
+
+```html
+<p><img src="https://example.com/image.png" alt="example image"></p>
+```
+
+**Example** `inline-image-empty-alt` (edge case: alternative text is empty; omit `alt`)
+
+```ffm
+![](https://example.com/image.png)
+```
+
+```html
+<p><img src="https://example.com/image.png"></p>
+```
+
+## Line Breaks
+
+**Syntax**: A line ending within a paragraph.
+
+**Semantics**: Consecutive physical lines within a paragraph belong to the same paragraph, and line endings between lines produce a line break.
+
+**Edge cases**:
+
+- A blank line ends the paragraph and does not produce a line break.
+- A line ending at the end of the document does not produce a line break.
+
+**HTML Output**: MUST output `<br>` or its equivalent serialized forms `<br />` and `<br/>`.
+
+**Example** `inline-line-break-basic`
+
+```ffm
+First line
+Second line
+```
+
+```html
+<p>First line<br>Second line</p>
+```
+
+**Example** `inline-line-break-document-end` (edge case: the final line ending does not produce a line break)
+
+```ffm
+Last line
+```
+
+```html
+<p>Last line</p>
+```
+
+## Inline Math Expressions
+
+**Syntax**: A mathematical expression wrapped by `$...$`.
+
+**Semantics**: An inline math unit presents a mathematical formula at an inline position.
+
+**Edge cases**:
+
+- `$$...$$` is a block-level math unit and is outside the scope of inline parsing.
+- Inline math expressions MUST NOT span lines. When delimiters are not closed on the same line, the construct is treated as text.
+- The interior of the delimiters SHOULD NOT begin or end with whitespace. When this is not satisfied, it is still parsed as an inline math expression.
+- `\[...\]` is not part of FFM math syntax.
+
+**HTML Output**: MUST output a container element that carries the math rendering result. The container MUST carry a recognizable marker, such as `class="math-inline"` or an equivalent attribute. The specific rendering method (MathML, KaTeX HTML, images, etc.) is determined by the implementation. Scripts in the expression MUST NOT be executed.
+
+**Fallback behavior**: When no math renderer is configured, the raw `$...$` text MUST be output and HTML entity escaped.
+
+**Example** `inline-math-basic`
+
+```ffm
+The formula $a + b = c$ is simple.
+```
+
+```html
+<p>The formula <span class="math-inline">a + b = c</span> is simple.</p>
+```
+
+**Example** `inline-math-fallback` (edge case: no renderer configured; output raw text)
+
+```ffm
+The formula $a + b = c$ is simple.
+```
+
+```html
+<p>The formula $a + b = c$ is simple.</p>
+```

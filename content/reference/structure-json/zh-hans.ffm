@@ -46,8 +46,8 @@
 上例要求存在以下文件：
 
 ```text
-content/<module>/tutorials/getting-started/zh-hans.md
-content/<module>/tutorials/syntax/zh-hans.md
+content/<module>/tutorial/getting-started/zh-hans.md
+content/<module>/tutorial/syntax/zh-hans.md
 ```
 
 子导航的 `slug` 会参与实际路径拼接。不要把根目录中的 `formatting/zh-hans.md` 放在名为 `tooling` 的子导航下，否则生成器会寻找不存在的 `tooling/formatting/zh-hans.md`。

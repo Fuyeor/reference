@@ -13,5 +13,5 @@
 ## Next steps
 
 - Configure your [local development environment](./development) to build and debug the `chemistry` service.
-- Explore the [API endpoint](./apis/depict), parameters, and response formats.
+- Explore the [API endpoint](./api/depict), parameters, and response formats.
 - Learn how to [embed in Markdown or HTML](./integration/embed), or [integrate with JavaScript](./integration/javascript/native).

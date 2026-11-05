@@ -98,4 +98,4 @@ For machine-readable output, add `--json`:
 fpm publish --json
 ```
 
-The command prints the package name, version, tarball URL, and SHA-256 checksum. Continue with [Publish a package](../../how-to/publish) for CI and directory-specific workflows.
+The command prints the package name, version, tarball URL, and SHA-256 checksum. Continue with [Publish a package](./../how-to/publish) for CI and directory-specific workflows.

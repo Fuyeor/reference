@@ -1,0 +1,50 @@
+# What Is Markdown?
+
+Markdown is a lightweight markup language that lets you write documents in plain text, using a few simple symbols to represent formatting. The same document can then be converted into multiple formats, including HTML, PDF, and Word.
+
+```slide
+### 💜 Why Use Markdown
+
+- **Minimal learning curve**: You only need to master a few core symbols to get started without barriers.
+- **Focus on content creation**: No need to frequently move your hands away to adjust font size, weight, and color while writing documents. Just focus on the text content, and formatting can be done as you go; you can also use WYSIWYG real-time preview for visual editing, balancing efficiency and intuitiveness.
+- **Lightweight and cross-platform**: The file is essentially in plain text format and extremely small in size. Any text editor can directly open, read, and edit the content. It can be seamlessly rendered into web pages, or export tools can be used to generate perfectly formatted PDF, Word, and other formats.
+- **Save LLM costs**: Content written in Markdown contains no redundant style code and can be accurately understood and processed by AI with minimal Token consumption.
+
+---
+
+### ❌ Limitations of HTML
+
+- **Poor adaptability**: HTML exists only in browsers and is difficult to adapt to native apps, terminals, and other scenarios without a browser environment. In addition, if CSS is written directly in HTML to change styles, it is difficult to adapt to dark mode and other multi-theme environments; and it is often filtered according to the rendering policies of the target platform.
+- **Privacy and security risks**: HTML documents allow CSS styles and even JavaScript scripts to be directly embedded. When opening unknown HTML locally, unauthorized remote network requests may be triggered in the background (such as loading remote images, XSS attacks, etc.), thereby leaking the user's real IP or other private information.
+- **Overly bloated content**: HTML contains a large number of repetitively closed tags (such as `<div>` and `<p>`), and its syntax structure is lengthy. Without visual aids, it is extremely difficult to hand-write and intuitively read by humans.
+
+---
+
+### ❌ Limitations of Microsoft Word
+
+- **Opaque structure**: A Word document (`.docx`) is essentially an XML zip package mixing styles, text, and images, making it difficult to directly and quickly extract pure content.
+- **Weak compatibility**: The same Word document often has issues such as table deformation and inconsistent styles when opened in Microsoft Office, WPS, LibreOffice, and on mobile devices.
+- **High storage overhead**: Because there is a large amount of metadata XML code, even a Word document with only 1 character written is about 13KB in underlying size, which is inconvenient for massive storage and lightweight distribution.
+```
+
+## Tutorial Overview
+
+- [Basic Syntax](./syntax/basic): including headings, lists, bold/italic, code blocks, and other syntax
+- [Layout Blocks](./syntax/advanced): including table, slide, chain, collapsible accordion, and other syntax
+- [Advanced Extensions](./syntax/extension): how to input flowcharts, mathematical formulas, chemical structure formulas, sheet music, etc. in Markdown
+
+## Frequently Asked Questions
+
+```chain
+**Does Markdown have variants?**
+
+Yes. Markdown is an umbrella term for a class of lightweight markup languages. Different platforms and specifications extend or constrain the basic syntax. Examples include FFM, which is introduced in this article, as well as CommonMark and GitHub Flavored Markdown (GFM).
+
+**What is Markdown best suited for?**
+
+Markdown is well suited for writing posts, notes, blogs, and technical documentation. Where rendering is not supported, it remains reasonably readable; where rendering is supported, it produces clean formatting. Because it is plain text and small in size, it is easy to store long-term and unlikely to become corrupted.
+
+**What is Markdown not suited for?**
+
+Markdown is not suited for complex tables (for example, tables that require merged cells or need lists or code inside cells) or highly interactive content (such as animated slides). These needs are better handled by specialized tools or formats.
+```

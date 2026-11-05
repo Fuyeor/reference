@@ -1,0 +1,181 @@
+# 排版块规范
+
+## 概述
+
+排版块是 FFM 定义的块级容器，用于表示特定排版结构。排版块由围栏定界符开始和结束，内部按块级语法递归解析。排版块可以嵌套其他块级语法，包括其他排版块。
+
+排版块围栏先于普通围栏代码块识别。语言标识符为 `slide`、`chain`、`accordion` 的围栏分别按对应排版块解析，不输出 `<pre><code>`。其余语言标识符的围栏按围栏代码块处理，见「块级 · 围栏代码块」。
+
+排版块的 HTML 输出锚定语义 class。实现可以在语义 class 外附加其他 class 或包装元素，但不得省略规范定义的核心 class。符合性测试比对核心 class 和语义子树，忽略附加 class 和外部包装。
+
+排版块未闭合时，延续到文档末尾，按围栏代码块降级。
+
+## slide
+
+**语法**：` ```slide ` 围栏，内部用分页符分隔幻灯片页。分页符为独占一行的 `---`，且前后各有一个空行。
+
+**语义**：slide 是块级容器，包含一个或多个 slide-item。每个 slide-item 内部按块级语法递归解析。
+
+**边界情况**：
+
+- 分页符 `---` 前后必须各有一个空行。不满足时，`---` 不构成分页符，按普通文本处理。当前规范要求空行；未来可能放宽此要求，但放宽不属于本规范当前定义的行为。
+- 分页符只支持 `---`，不支持 `***` 或 `___`。
+- slide 内部可以嵌套其他块级语法，包括其他排版块。
+- slide 至少包含一个 slide-item。
+
+**HTML 输出**：必须输出 `<div class="ffm-slide"><div class="slide-container">...</div></div>`。每个 slide-item 必须输出 `<div class="slide-item">`，内部为递归解析的结果。
+
+**降级行为**：不支持时按围栏代码块降级，输出 `<pre><code class="language-slide">`。
+
+**示例** `layout-slide-basic`
+
+````ffm
+```slide
+第一页
+
+---
+
+第二页
+```
+````
+
+```html
+<div class="ffm-slide"><div class="slide-container"><div class="slide-item"><p>第一页</p></div><div class="slide-item"><p>第二页</p></div></div></div>
+```
+
+**示例** `layout-slide-no-blank-line`
+
+````ffm
+```slide
+示例内容
+---
+示例内容
+```
+````
+
+```html
+<div class="ffm-slide"><div class="slide-container"><div class="slide-item"><p>示例内容<br>---<br>示例内容</p></div></div></div>
+```
+
+## chain
+
+**语法**：` ```chain ` 围栏，内部由节点组成。节点标题为独占一行的 `**...**`，其后为节点示例内容。
+
+**语义**：chain 是块级容器，每个节点包含标题和示例内容。节点标题可以带任务状态：`**[ ] 标题**` 为待办，`**[x] 标题**` 为已完成，`**标题**` 为普通。
+
+**边界情况**：
+
+- 节点标题必须独占一行，且于 `**...**` 内部。行内其他位置的 `**` 是普通强调，不构成节点标题。
+- 待办标题的 `[ ]` 后必须有一个空格。`[x]` 不区分大小写，`[X]` 同样表示已完成。
+- 节点标题下的示例内容可以空行开始，也可以直接开始，渲染结果相同。
+- 节点没有示例内容时，`chain-content` 元素仍必须输出，但内部为空。
+- chain 内部可以嵌套其他块级语法，包括其他排版块。
+- chain 至少包含一个节点。
+
+**HTML 输出**：必须输出 `<div class="ffm-chain">`。每个节点必须输出 `<div class="chain-item">`，待办节点附加 `is-pending`，已完成节点附加 `is-completed`，普通节点不附加状态 class。节点内部必须包含 `<div class="chain-marker">`、`<div class="chain-body">`、`<div class="chain-title">`、`<div class="chain-content">`。
+
+**降级行为**：不支持时按围栏代码块降级，输出 `<pre><code class="language-chain">`。
+
+**示例** `layout-chain-basic`
+
+````ffm
+```chain
+**[ ] 待办节点标题**
+示例内容
+
+**[x] 已完成节点标题**
+示例内容
+
+**普通节点标题**
+
+示例内容
+```
+````
+
+```html
+<div class="ffm-chain"><div class="chain-item is-pending"><div class="chain-marker"></div><div class="chain-body"><div class="chain-title">待办节点标题</div><div class="chain-content"><p>示例内容</p></div></div></div><div class="chain-item is-completed"><div class="chain-marker"></div><div class="chain-body"><div class="chain-title">已完成节点标题</div><div class="chain-content"><p>示例内容</p></div></div></div><div class="chain-item"><div class="chain-marker"></div><div class="chain-body"><div class="chain-title">普通节点标题</div><div class="chain-content"><p>示例内容</p></div></div></div></div>
+```
+
+**示例** `layout-chain-empty-content`
+
+````ffm
+```chain
+**节点**
+```
+````
+
+```html
+<div class="ffm-chain"><div class="chain-item"><div class="chain-marker"></div><div class="chain-body"><div class="chain-title">节点</div><div class="chain-content"></div></div></div></div>
+```
+
+**示例** `layout-chain-nested`
+
+````ffm
+```chain
+**这是滑块**
+下面，可以嵌套滑块：
+
+```slide
+示例内容
+
+---
+
+示例内容
+```
+
+**其他节点**
+```
+````
+
+```html
+<div class="ffm-chain"><div class="chain-item"><div class="chain-marker"></div><div class="chain-body"><div class="chain-title">这是滑块</div><div class="chain-content"><p>下面，可以嵌套滑块：</p><div class="ffm-slide"><div class="slide-container"><div class="slide-item"><p>示例内容</p></div><div class="slide-item"><p>示例内容</p></div></div></div></div></div></div><div class="chain-item"><div class="chain-marker"></div><div class="chain-body"><div class="chain-title">其他节点</div><div class="chain-content"></div></div></div></div>
+```
+
+## accordion
+
+**语法**：` ```accordion ` 围栏，内部由节点组成。节点标题为独占一行的 `**...**`，其后为节点示例内容。语法与 chain 相同，但不支持任务状态。
+
+**语义**：accordion 是块级容器，每个节点包含标题和示例内容。节点示例内容默认折叠。
+
+**边界情况**：
+
+- 节点标题必须独占一行，且于 `**...**` 内部。行内其他位置的 `**` 是普通强调。
+- `[ ]` 和 `[x]` 在 accordion 节点标题中是普通文本，不构成任务状态。
+- 节点标题下的示例内容可以空行开始，也可以直接开始，渲染结果相同。
+- 节点没有示例内容时，`accordion-body` 元素仍必须输出，但内部为空。
+- accordion 内部可以嵌套其他块级语法，包括其他排版块。嵌套代码块时使用四个反引号。
+- accordion 至少包含一个节点。
+
+**HTML 输出**：必须输出 `<div class="ffm-accordion">`。每个节点必须输出 `<details>`，内部包含 `<summary>` 和 `<div class="accordion-body">`。`name` 属性不锚定，由实现决定是否输出，测试忽略该属性。
+
+**降级行为**：不支持时按围栏代码块降级，输出 `<pre><code class="language-accordion">`。
+
+**示例** `layout-accordion-basic`
+
+````ffm
+```accordion
+**节点标题一**
+示例内容一
+
+**节点标题二**
+
+示例内容二
+```
+````
+
+```html
+<div class="ffm-accordion"><details><summary>节点标题一</summary><div class="accordion-body"><p>示例内容一</p></div></details><details><summary>节点标题二</summary><div class="accordion-body"><p>示例内容二</p></div></details></div>
+```
+
+**示例** `layout-accordion-no-task`
+
+````ffm
+```accordion
+**[ ] 示例标题**
+示例内容
+```
+````
+
+```html
+<div class="ffm-accordion"><details><summary>[ ] 示例标题</summary><div class="accordion-body"><p>示例内容</p></div></details></div>
+```
