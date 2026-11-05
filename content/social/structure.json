@@ -10,15 +10,47 @@
   "navigation": [
     { "slug": "overview" },
     {
-      "slug": "connections",
+      "slug": "thought",
       "title": {
-        "zh-hans": "内容同步账号",
-        "en": "Connected Accounts"
+        "zh-hans": "发布想法",
+        "en": "Publish Thought"
       },
       "navigation": [
-        { "slug": "bluesky" },
-        { "slug": "telegram" },
-        { "slug": "mastodon" }
+        { "slug": "overview" },
+        { "slug": "visibility" },
+        { "slug": "anonymous" }
+      ]
+    },
+    {
+      "slug": "account",
+      "title": {
+        "zh-hans": "账号管理",
+        "en": "Account Management"
+      },
+      "navigation": [
+        {
+          "slug": "connection",
+          "title": {
+            "zh-hans": "外部身份连接",
+            "en": "External Connection"
+          },
+          "navigation": [
+            { "slug": "overview" },
+            { "slug": "external" },
+            {
+              "slug": "synchronize",
+              "title": {
+                "zh-hans": "内容同步账号",
+                "en": "Synchronize Accounts"
+              },
+              "navigation": [
+                { "slug": "bluesky" },
+                { "slug": "telegram" },
+                { "slug": "mastodon" }
+              ]
+            }
+          ]
+        }
       ]
     }
   ]

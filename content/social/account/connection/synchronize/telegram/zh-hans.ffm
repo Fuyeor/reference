@@ -26,6 +26,6 @@
 
 ## 6、配置连接
 
-访问 [Ф Connections](https://www.fuyeor.com/options/account/connections) ，选择 Telegram 连接选项，输入机器人的 Token 和频道的用户名，以完成连接配置。
+访问[同步账号设置](https://www.fuyeor.com/option/account/connection/synchronize) ，选择 Telegram 连接选项，输入机器人的 Token 和频道的用户名，以完成连接配置。
 
 > 注意：请不要填写机器人的用户名，既以 bot 结尾的用户名。

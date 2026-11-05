@@ -2,7 +2,7 @@
 
 ## 1、创建 Bluesky 账号
 
-访问 [https://bsky.app](https://bsky.app) ，点击「Create a new account」按钮，按照页面提示完成账号创建。
+访问 https://bsky.app ，点击「Create a new account」按钮，按照页面提示完成账号创建。
 
 若已有账号，请从以下步骤开始：
 
@@ -17,4 +17,4 @@
 
 ## 3、在 Ф social 绑定
 
-访问 [Ф Connections](https://www.fuyeor.com/options/account/connections) ，选择 Bluesky 连接选项，将用户名及上一步复制的 App Password 粘贴并保存。
+访问[同步账号设置](https://www.fuyeor.com/option/account/connection/synchronize) ，选择 Bluesky 连接选项，将用户名及上一步复制的 App Password 粘贴并保存。

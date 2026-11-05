@@ -4,7 +4,7 @@
 
 ## 1、创建 Mastodon 账号
 
-访问 [https://mastodon.social](https://mastodon.social)，点击「注册」按钮，按照页面提示完成账号创建。
+访问 https://mastodon.social，点击「注册」按钮，按照页面提示完成账号创建。
 
 若已有账号，请从以下步骤开始：
 
@@ -18,11 +18,11 @@
 
 ## 3、在 Ф social 绑定
 
-访问 [Ф Connections](https://www.fuyeor.com/options/account/connections) ，选择 Mastodon 连接选项，将上一步复制的 Access Token 粘贴并保存。
+访问[同步账号设置](https://www.fuyeor.com/option/account/connection/synchronize) ，选择 Mastodon 连接选项，将上一步复制的 Access Token 粘贴并保存。
 
 绑定成功后，即可使用相关同步功能。如遇问题，请检查 Token 是否正确或权限是否充足。
 
-## 4、在 Mastodon 启用「机器人标识」（可选）
+## 4、可选：在 Mastodon 启用「机器人标识」
 
 打开[更改个人资料](https://mastodon.social/settings/profile) > 其他，选择：
 
