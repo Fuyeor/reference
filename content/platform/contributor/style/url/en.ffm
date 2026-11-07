@@ -1,0 +1,31 @@
+# URL Style
+
+This section defines the writing style for URLs, applicable to documentation sites, APIs, and any externally exposed paths. The goal of this style guide is to make paths predictable, readable, and stable over the long term.
+
+## Core Principles
+
+Most user-visible URLs do not represent real folders or files, but rather keys/identifiers. Each segment in a path should be understood as a stable identifier, not as a directory or file on disk.
+
+## Characters and Case
+
+- **All lowercase**: unless the segment is dynamic content, such as a username (`/@:username`).
+- **Separate multiple words with hyphens**: such as `/no-phone-policy` and `/terms-of-service`; do not use underscores or letter casing.
+- Use only lowercase letters, digits, and hyphens in URLs. Other characters should be percent-encoded.
+
+## Path Structure
+
+- **No trailing slash**: for example, `/example`, not `/example/`; the root path `/` is the exception.
+- **No file extension unless it corresponds to a real file**: for example, `/example`, not `/example.html`.
+- **Navigation depth**: keep it within 3–4 segments where possible; if it becomes too deep, consider flattening it.
+- **Use singular forms in paths**: URLs are identifiers, not a way to indicate quantity; collectiveness is expressed by page content or data structures, and should not be redundantly encoded in the path.
+
+## Anchors
+
+- Hash anchors use kebab-case and all lowercase. For example, `/example#design-principle`.
+
+## Multilingual URL Design
+
+- **Language code format**: Use BCP 47 language tags, such as `en`. The language tag should be placed in the first segment of the URL.
+- **Script and regional variants**: When the same language has different writing systems or regional variants, use the corresponding subtags to distinguish them. For example, use `zh-hans` for Simplified Chinese and `zh-hant` for Traditional Chinese.
+- **Region codes**: Include a region code only when a region is required. For example, use `/en-us/` or `/fr-fr/` only when a website must target a specific region and display that region’s policies, currency, or dates. When no specific region is needed, use only the language code, such as `/en/` or `/ja/`; avoid using country codes in place of language codes, for example, use `/zh-hans/` rather than `/cn/`, and `/ja/` rather than `/jp/`.
+- **Language prefix**: Apps may omit the language prefix; documentation sites are recommended to include it so that pages have stable, shareable URLs.

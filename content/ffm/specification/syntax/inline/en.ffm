@@ -133,7 +133,7 @@ The molecule is #[smiles: CCO] in this context.
 ```
 
 ```html
-<p>The molecule is  in this context.</p>
+<p>The molecule is #[smiles: CCO] in this context.</p>
 ```
 
 **Example** `inline-annotation-unclosed` (edge case: annotation is not closed)

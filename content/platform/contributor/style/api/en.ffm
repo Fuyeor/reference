@@ -1,0 +1,166 @@
+# API and Database Style
+
+This section defines naming conventions for API fields and databases. Data naming follows three foundational principles: **word-first, singular, lowercase-first**.
+
+Names should express only information that cannot be conveyed by data structures, types, and context. Semantics already expressed by structure should not be redundantly encoded in identifiers.
+
+## API
+
+API fields use camelCase by default, to match the natural naming style of frontend code (TypeScript).
+
+### URL
+
+API URLs follow the [URL Style Guide](./url) and use singular forms; a version prefix is recommended, for example `example.com/v1`.
+
+### Word-First
+
+When a clear, stable word can express the semantics, do not use a longer compound field name.
+
+```text
+created
+updated
+count: {view, answer, vote}
+```
+
+Instead of:
+
+```text
+createdAt
+created_at
+updatedAt
+viewCount
+answerCount
+voteCount
+```
+
+The type of a time value already expresses that it is a time; there is no need to repeat this with `At`.
+
+### Singular
+
+Field names use the singular form by default, including arrays.
+
+```json
+{
+  "answer": [],
+  "label": []
+}
+```
+
+Instead of:
+
+```json
+{
+  "answers": [],
+  "labels": []
+}
+```
+
+Collectiveness is expressed solely by the data structure. This rule also applies to resource and relationship naming, unless external protocols, standards, or existing compatibility requirements call for plural forms.
+
+### Null Values
+
+Fields that belong to the schema in a fixed response representation should be present.
+
+Send `null` when a field currently has no value:
+
+```json
+{
+  "nickname": null,
+  "avatar": null
+}
+```
+
+Do not dynamically omit fields just because their current value is empty.
+
+## Database
+
+Relational databases use snake_case to align with SQL ecosystem conventions:
+
+```text
+created
+user_id
+conversation_id
+original_thought_id
+```
+
+Object/document-oriented databases such as MongoDB use camelCase by default, consistent with the API/application model.
+
+### Primary Keys
+
+The primary key of the current table itself is uniformly named `id`, not `<table>_id`. For example:
+
+```sql
+user.id
+message.id
+thought.id
+```
+
+Not:
+
+```text
+user.user_id
+message.message_id
+thought.thought_id
+```
+
+Use the entity name only when referencing another entity:
+
+```text
+message.user_id
+message.conversation_id
+thought.user_id
+```
+
+### Prefer Recording Time for Status
+
+For states indicating whether something has happened, as long as the occurrence time is meaningful or helps restore history, prefer recording the event time. The field type is a timestamp, and `NULL` indicates that it has not yet occurred:
+
+```sql
+CREATE TABLE thought (
+  id       UUID PRIMARY KEY,
+  created  TIMESTAMPTZ NOT NULL,
+  updated  TIMESTAMPTZ,
+  deleted  TIMESTAMPTZ,
+);
+```
+
+Do not use booleans to record status:
+
+```sql
+CREATE TABLE thought (
+  id          UUID PRIMARY KEY,
+  is_created  BOOLEAN NOT NULL DEFAULT FALSE,
+  is_updated  BOOLEAN NOT NULL DEFAULT FALSE,
+  is_deleted  BOOLEAN NOT NULL DEFAULT FALSE,
+);
+```
+
+This makes the state more informative and improves data recoverability; booleans are used only for attributes that truly have only two states and whose event occurrence time has no domain meaning.
+
+### Lowercase
+
+Database tables, fields, and enum values are all lowercase by default. For example:
+
+```sql
+CREATE TYPE status AS ENUM (
+  'active',
+  'banned',
+  'deleted'
+);
+```
+
+Do not use all uppercase or title case:
+
+```sql
+CREATE TYPE Status AS ENUM (
+  'Active',
+  'BANNED',
+  'Deleted'
+);
+```
+
+## Priority
+
+When rules conflict, determine precedence in the following order:
+
+External standards or compatibility > Domain semantics > Ecosystem conventions > This style guide > Shortest spelling

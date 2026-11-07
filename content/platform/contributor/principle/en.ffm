@@ -1,0 +1,46 @@
+# General Development Principles
+
+This section defines the guiding principles for development. These principles govern code reviews, architectural decisions, and trade-offs among new proposals. Principles may conflict with one another and must be weighed according to the specific context.
+
+## Core Goals
+
+Development should pursue four core goals:
+
+- **Efficient**: Minimal bundle size, lowest memory footprint, and highest execution performance. Algorithmic optimization should be considered during implementation.
+- **Sustainability**: Reduce unnecessary resource consumption, including transfer size, storage overhead, and runtime resources.
+- **Security**: Security-oriented design that is friendly to long-term maintenance.
+- **Aesthetics**: While satisfying functional requirements, preserve aesthetic quality in design and implementation.
+
+## Guiding Principles
+
+### Design Before Implementation
+
+Consider design before implementation: data structures, boundaries, failure modes, and long-term maintenance costs.
+
+### Performance First
+
+Provided functional requirements are met, prefer solutions with lower resource overhead:
+
+- Minimal bundle size
+- Lowest memory footprint
+- Highest execution performance
+
+Algorithmic optimization should be considered during implementation, rather than writing code first and remediating later.
+
+### Recoverability
+
+Prefer solutions that are easier to restore. When multiple solutions achieve the same effect, prefer the one that, if removed in the future, is easier to restore to the state before it was added.
+
+### Remove Redundancy
+
+Remove designs, abstractions, and mechanisms whose necessity cannot be justified. Specific requirements:
+
+- **Clear single error reporting**: Design clear, single error reporting; redundant multiple fallbacks are prohibited.
+- **Avoid fallbacks for developers**: Values that do not meet requirements should fail fast (with an error).
+- **Minimal necessity**: Designs, abstractions, and mechanisms must be necessary to exist; any design, code, or naming whose necessity cannot be justified should be removed.
+
+### General Principles
+
+- **Style**: Oriented toward long-term maintenance and security.
+- **Details**: Thoroughly consider details related to memory management, performance, bundle size, code maintainability, and so on.
+- **Best practices**: Refer to industry best practices for the current context.

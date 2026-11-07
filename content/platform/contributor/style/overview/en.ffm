@@ -1,0 +1,133 @@
+# General Code Style
+
+This section defines code style conventions applicable across languages and projects. For frontend-specific conventions, see “Frontend Style”; for API and data naming conventions, see “API Style”.
+
+## Naming Conventions
+
+### Files and Directories
+
+Files and directories use kebab-case. For example:
+
+```text
+left-sidebar.vue
+domain-card.vue
+```
+
+File names are all lowercase, including files conventionally written in uppercase. For example:
+
+```text
+readme.md
+license
+```
+
+### Removing Redundant Domain Qualifiers
+
+Within a given context, remove meaningless prefixes, but retain a small number of independently recognizable prefixes to allow global replacement.
+
+For example, in `@fuyeor/vue-query`:
+
+- Use `QueryOption`.
+- Do not use `VueQueryPluginOptions`: the package name already indicates Vue, so there is no need to repeat it in the variable name.
+- Do not use `DefaultOption`: `Query` is the minimal necessary prefix that can be globally replaced.
+
+### Word-First
+
+When a clear, stable word can express the semantics, do not use a longer compound field name. For example:
+
+```text
+updated
+created
+```
+
+A time type already expresses time semantics; there is no need to repeat this with an `at` suffix.
+
+### Singular-First
+
+File names, directories, variables, modules, and APIs all use the singular; collectiveness is expressed by data structures, not by English plurals. For example:
+
+```text
+userSet
+userMap
+userArray
+```
+
+Use plural forms only when external protocols, standards, or requirements call for them, such as fields specified by a Web API or protocol.
+
+Here, “singular” refers to the most common form of the word in ordinary technical usage, not a linguistic singular. If a word basically has only one form in common usage, use that form. For example:
+
+- `data` counts as singular; do not use `datum`.
+- `media` counts as singular; do not use `medium`.
+
+The criterion is “whether readers commonly see it and whether it is predictable”, not English inflection rules. Do not introduce obscure forms just for formal singularity.
+
+### Constant Naming
+
+Constants should follow the style of ordinary immutable constants in the language as closely as possible.
+
+For example, in JavaScript, `const` already expresses constant semantics, so camelCase is sufficient:
+
+```js
+const defaultOption = {...}
+```
+
+Avoid the medieval Latin stone-tablet style:
+
+```js
+const DEFAULT_OPTIONS = {...}
+```
+
+Different languages have different conventions for constants; follow the language’s ordinary immutable constant style.
+
+### Community Overrides
+
+When the community has strong recommendations, they may override the above styles to maintain consistency. For example:
+
+- In JavaScript, constants and variables use camelCase; class names use PascalCase.
+- Frontend composable file names remain camelCase, e.g. `useComposable.ts`.
+- Rust package manager files use `Cargo.toml`.
+- When a framework or library has an explicit naming convention, follow that convention.
+
+## Comments
+
+Write a concise functional comment on functions, major functional blocks, or complex logic. The comment explains “what this code does” and does not repeat what the code itself already expresses.
+
+It is recommended to follow and leverage the native comment semantics of each language, such as Rust’s API contract comments and JavaScript’s JSDoc.
+
+## Path Comments
+
+The first line of code should be a path comment, so the file’s location can be identified. Specifically:
+
+- Application code starts with the source path `// src/...`.
+- Library code starts with the library name, e.g. `// @scope/name/src/...`.
+
+The comment syntax follows the language. Only source files need path comments, such as `.vue`, `.rs`, `.ts`, and `.cs`. Configuration files, documentation, and other non-source files do not need them.
+
+## Componentization
+
+When the same logic or code is used in more than 2 places, it should be extracted into a reusable component or function. When used in 2 or fewer places, prefer keeping it inline to avoid premature abstraction.
+
+## Self-Contained
+
+Related functionality should be grouped in the same directory to form a self-contained module. A module contains its own components, composables, state, types, and API wrappers, reducing implicit cross-directory dependencies.
+
+## Avoid Relative Paths
+
+Relative paths tend to break after directory changes and make it difficult for readers to determine a module’s actual location.
+
+Prefer path aliases rooted at the project root. The syntax differs across languages and toolchains, but the goal is the same: make import paths stable, readable, and uniformly replaceable during refactoring.
+
+**Node.js**: Configure `imports` in `package.json`, using `#/` or `@/` as the root path alias:
+
+```ts
+import { foo } from '#/module/foo';
+```
+
+**Rust**: Use `crate::` from the root directory:
+
+```rust
+use crate::module::foo;
+```
+
+This way, when moving files or renaming directories, you only need to adjust the alias configuration or root path, rather than modifying `../../` one by one.
+
+Relative paths are not absolutely forbidden. They can still be used in single-file scripts, temporary files, or examples that must remain self-contained; however, in regular application and library code, prefer root path aliases.

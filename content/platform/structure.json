@@ -4,11 +4,11 @@
     "en": "Platform Guidelines"
   },
   "description": {
-    "zh-hans": "Ф 平台守则与政策，包含创作者守则、平台政策等内容。",
-    "en": "Ф guidelines and policies, including creator guidelines and platform policies."
+    "zh-hans": "Ф 平台守则、政策与贡献者规范，包含平台政策、创作者守则和工程约定。",
+    "en": "Ф guidelines, policies, and contributor standards, including platform policies, creator guidelines, and engineering conventions."
   },
   "navigation": [
-    { "slug": "about" },
+    { "slug": "overview" },
     {
       "slug": "policy",
       "title": {
@@ -37,6 +37,29 @@
         { "slug": "spamming" },
         { "slug": "unverified-harmful-content" },
         { "slug": "destructive-content" }
+      ]
+    },
+    {
+      "slug": "contributor",
+      "title": {
+        "zh-hans": "贡献者规范",
+        "en": "Contributor Standards"
+      },
+      "navigation": [
+        { "slug": "principle" },
+        {
+          "slug": "style",
+          "title": {
+            "zh-hans": "风格指南",
+            "en": "Style"
+          },
+          "navigation": [
+            { "slug": "overview" },
+            { "slug": "api" },
+            { "slug": "url" },
+            { "slug": "markdown" }
+          ]
+        }
       ]
     }
   ]

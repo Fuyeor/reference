@@ -1,0 +1,166 @@
+# API 与数据库风格
+
+本节定义 API 字段和数据库命名约定。数据命名遵循三个基础原则：**单词优先、单数化、小写优先**。
+
+命名只表达无法由数据结构、类型和上下文表达的信息。结构已经表达的语义，不在 identifier 中重复编码。
+
+## API
+
+API 字段默认使用 camelCase，以匹配前端代码（TypeScript）的自然命名方式。
+
+### URL
+
+API 的 URL 遵循 [URL 风格指南](./url)，使用单数；推荐带版本号前缀，例如 `example.com/v1`。
+
+### 单词优先
+
+存在清晰、稳定的单词可以表达语义时，不使用更长的复合字段名。
+
+```text
+created
+updated
+count: {view, answer, vote}
+```
+
+而不是：
+
+```text
+createdAt
+created_at
+updatedAt
+viewCount
+answerCount
+voteCount
+```
+
+时间值的类型已经表达它是时间，不需要通过 `At` 重复说明。
+
+### 单数化
+
+字段名默认使用单数形式，包括数组。
+
+```json
+{
+  "answer": [],
+  "label": []
+}
+```
+
+而不是：
+
+```json
+{
+  "answers": [],
+  "labels": []
+}
+```
+
+集合性由数据结构唯一表达。此规则也适用于资源与关系命名；除非外部协议、标准或既有兼容性要求使用复数形式。
+
+### null 值
+
+固定 response representation 中属于 schema 的字段应当存在。
+
+字段当前没有值时发送 `null`：
+
+```json
+{
+  "nickname": null,
+  "avatar": null
+}
+```
+
+不因为当前值为空而动态省略字段。
+
+## 数据库
+
+关系型数据库使用 snake_case，以符合 SQL 生态习惯：
+
+```text
+created
+user_id
+conversation_id
+original_thought_id
+```
+
+MongoDB 等以对象/文档模型为主的数据库默认使用 camelCase，与 API / application model 保持一致。
+
+### 主键
+
+当前表自身的主键统一命名为 `id`，不使用 `<table>_id`。例如：
+
+```sql
+user.id
+message.id
+thought.id
+```
+
+不使用：
+
+```text
+user.user_id
+message.message_id
+thought.thought_id
+```
+
+只有引用其他实体时才使用实体名：
+
+```text
+message.user_id
+message.conversation_id
+thought.user_id
+```
+
+### 状态优先记录时间
+
+对于「某件事是否已经发生」的状态，只要发生时间具有意义或有助于恢复历史，优先记录事件时间。字段类型为时间戳，`NULL` 表示尚未发生：
+
+```sql
+CREATE TABLE thought (
+  id       UUID PRIMARY KEY,
+  created  TIMESTAMPTZ NOT NULL,
+  updated  TIMESTAMPTZ,
+  deleted  TIMESTAMPTZ,
+);
+```
+
+不使用布尔值记录状态：
+
+```sql
+CREATE TABLE thought (
+  id          UUID PRIMARY KEY,
+  is_created  BOOLEAN NOT NULL DEFAULT FALSE,
+  is_updated  BOOLEAN NOT NULL DEFAULT FALSE,
+  is_deleted  BOOLEAN NOT NULL DEFAULT FALSE,
+);
+```
+
+这使状态具有更多信息，并提高数据的可恢复性；布尔只用于真正只有二态、且事件发生时间没有领域意义的属性。
+
+### 小写
+
+数据库表、字段、枚举值默认全部小写。例如：
+
+```sql
+CREATE TYPE status AS ENUM (
+  'active',
+  'banned',
+  'deleted'
+);
+```
+
+不使用全大写或首字母大写：
+
+```sql
+CREATE TYPE Status AS ENUM (
+  'Active',
+  'BANNED',
+  'Deleted'
+);
+```
+
+## 优先级
+
+发生规则冲突时，按以下顺序判断：
+
+外部标准或兼容性 > 领域语义 > 生态约定 > 本风格指南 > 最短拼写

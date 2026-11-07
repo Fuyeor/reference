@@ -1,0 +1,79 @@
+# Markdown Style
+
+This section defines formatting conventions for writing documents in Markdown.
+
+## General Rules
+
+### Headings
+
+- Headings start with `#`, with one blank line before and after.
+- Use only one level-one heading per file, placed at the beginning of the file as the document title.
+- Do not add punctuation at the end of headings.
+
+### Blank Lines
+
+- Unless at the beginning or end of the document, leave one blank line before and after headings, fenced code blocks, lists, and tables.
+- Do not use multiple consecutive blank lines. One blank line is sufficient to separate block-level units.
+- Do not keep a trailing newline at the end of the file. FFM is a web-first format; even when editing locally, the end of the document should remain clean.
+
+### Lists
+
+- A list marker is followed by one space. For example: `- item`, whereas `-item` will not be recognized as a list.
+- List items at the same level use consistent indentation. Nested lists uniformly use 2-space indentation.
+- Unordered list markers remain consistent within the same document: use only `-` or only `*` throughout a document.
+- Ordered lists use incrementing numbers. The numbers in the source file do not affect rendering, but keeping them incrementing makes reading and diffs easier.
+
+### Fenced Code Blocks
+
+- Leave one blank line before and after fenced code blocks.
+- It is recommended to specify a language identifier for fenced code blocks, such as `ts` or `bash` after the opening fence. The language identifier affects syntax highlighting and fallback behavior.
+- Fences at the same level within the same document use the same number of backticks; do not mix them.
+- Nothing inside a fenced code block is parsed; content is preserved literally. Prefer fenced code blocks when displaying raw Markdown or configuration.
+
+### Avoid Overusing Code Blocks
+
+Code blocks have the semantics of “preserving literals”; their contents are generally not processed (e.g., translation, traditional/simplified Chinese conversion, spell correction). Therefore, the following style is not recommended:
+
+```text
+deleted = NULL      → not yet deleted
+deleted = timestamp → deleted, with deletion time retained
+```
+
+The same content should be written as regular prose or a list:
+
+- `deleted = NULL`: not yet deleted.
+- `deleted = timestamp`: deleted, with deletion time retained.
+
+Code blocks should only be used for text that “must remain identical across languages”, such as code, commands, configuration, paths, and identifiers. Avoid using them to lay out ordinary narrative content.
+
+### Links and Images
+
+- Do not use bare URLs. In documents, prefer `[text](URL)`.
+- Link text should be descriptive; avoid text such as “click here” or “link”. Link text should be able to explain the target content on its own.
+- For internal document links, prefer root paths or descendant paths, and do not use `../`:
+  - **Root path**: starts with `/`, e.g. `/ffm/overview`. A root path corresponds to the site URL and does not depend on the current document location.
+  - **Descendant path**: starts with `./`, e.g. `./thought/overview`. Suitable for subpages under the current directory.
+  - **Do not use `../`**: A document’s location in the repository may change, and may not exactly correspond to the site URL. With `../`, it may resolve locally but become a 404 in the actual URL.
+- Images should provide meaningful alt text. Use empty alt text only when the image is purely decorative and carries no information. Do not omit alt text for non-decorative images.
+
+### Line Wrapping
+
+Do not wrap lines for Git or diff:
+
+- Git serves content only; content should not be made to accommodate Git or diff display.
+- Line wrapping depends on the editor, time, and editing environment, and is arbitrary, leading to inconsistent document style.
+- Soft line breaks do not take effect in all parsers; they may produce different rendering results under different parsers.
+
+### Comments
+
+Do not use `<!-- -->` to hide comments. Documents should be finished products and should not contain notes visible only to the author. When notes are needed, add a separate file nearby or write them into reader-facing prose.
+
+### FFM-Specific Rules
+
+If using [FFM (Fuyeor Flavored Markdown)](/ffm/overview) files (.ffm), follow FFM syntax rules:
+
+- Emphasis syntax uses `*italic*`, `**bold**`, `--strikethrough--`, `__underline__`.
+- Do not use inline HTML. FFM does not support HTML; express structure with FFM syntax units rather than tags such as `<div>` and `<br>`.
+- Do not use trailing spaces or backslashes to create hard line breaks. FFM’s line-break semantics rely on physical line breaks within paragraphs.
+
+It is recommended to use the [Fuyeor Flavored Markdown VS Code extension](https://marketplace.visualstudio.com/items?itemName=Fuyeor.ffm) to automatically format FFM documents. The rules covered by the extension overlap with most of the formatting requirements on this page.
